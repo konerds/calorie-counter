@@ -1,24 +1,8 @@
-# calorie-counter
+# 2021 마포구청 뉴딜일자리 사업단
+# 협업, 실습 경험용 개발팀 프로젝트
 
-## Project setup
-```
-npm install
-```
+Vue.js 프레임워크를 활용하여 CRUD 기능을 구현해보는 것을 목표로 잡았습니다
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+초기 기획에서 데이터의 양이 이렇게 방대할 지 몰라서 No-SQL 기반의 구글 파이어베이스 DB를 활용하였습니다
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+테스트 페이지 URL : https://vue-http-demo-2a476.web.app/
