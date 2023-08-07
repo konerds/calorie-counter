@@ -19,9 +19,9 @@ export default {
   computed: {
     filterIcon() {
       if (this.type === 'exist') {
-        return require('@/assets/check-yes.svg');
+        return '/assets/check-yes.svg';
       } else {
-        return require('@/assets/check-no.svg');
+        return '/assets/check-no.svg';
       }
     }
   },
