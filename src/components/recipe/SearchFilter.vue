@@ -290,17 +290,27 @@ export default {
 
 <style scoped>
 .search-filter-container {
-  width: 35%;
-  height: 100%;
+  width: 100%;
 }
 
 .search-filter-card {
-  width: 35%;
-  height: 87.5%;
-  position: fixed;
   z-index: 1;
-  display: flex;
-  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .search-filter-container {
+    width: 35%;
+    height: 100%;
+  }
+
+  .search-filter-card {
+    width: 35%;
+    height: 87.5%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+  } 
 }
 
 .search-filter {

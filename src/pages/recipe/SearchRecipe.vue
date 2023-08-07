@@ -179,11 +179,17 @@ export default {
 
 <style scoped>
 .search-container {
-  display: flex;
-  width: 100%;
-  height: 87.5%;
-  position: absolute;
-  top: 12.5%;
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .search-container {
+    display: flex;
+    width: 100%;
+    height: 87.5%;
+    position: absolute;
+    top: 12.5%;
+  }
 }
 
 .cart-badge {
@@ -194,12 +200,25 @@ export default {
 }
 
 .search-filter {
-  width: 35%;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .search-filter {
+    width: 35%;
+  }
 }
 
 .search-result,
 .recipe-detail {
-  width: 65%;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .search-result,
+  .recipe-detail {
+    width: 65%;
+  }
 }
 
 .text-font {

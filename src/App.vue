@@ -122,12 +122,17 @@ export default {
 
 #app .ant-layout-header {
   background: white;
-  position: fixed;
   z-index: 2;
   width: 100%;
   height: 12.5%;
   padding: 0;
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 15%);
+}
+
+@media (min-width: 1024px) {
+  #app .ant-layout-header {
+    position: fixed;
+  }
 }
 
 #app .ant-layout-content {
@@ -157,6 +162,17 @@ export default {
 
 #app > .ant-layout:last-child {
   margin: 0;
+}
+
+.ant-modal-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-modal-content {
+  width: 90%;
+  margin: auto;
 }
 
 .ant-input[disabled] {

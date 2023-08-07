@@ -132,7 +132,7 @@ export default {
 }
 
 .login-item {
-  width: 60%;
+  width: 90%;
   height: 50%;
   border-radius: 60px;
   background-color: white;
@@ -143,12 +143,31 @@ export default {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 25%);
 }
 
+@media (min-width: 1024px) {
+  .login-item {
+    width: 60%;
+  }
+}
+
 .login-header {
+  width: 100%;
+  font-size: large;
   margin-top: 7vh;
   margin-bottom: 0;
-  font-size: 2.9vw;
   line-height: 2.9vw;
   color: #32c2c8;
+}
+
+@media (min-width: 640px) {
+  .login-header {
+    font-size: xx-large;
+  }
+}
+
+@media (min-width: 1920px) {
+  .login-header {
+    font-size: xxx-large;
+  }
 }
 
 .login-form {
@@ -176,10 +195,16 @@ export default {
 }
 
 .login-footer-message {
-  font-size: 1.2vw;
+  font-size: smaller;
   color: #f7593d;
   text-decoration: underline;
   margin-right: 9vw;
+}
+
+@media (min-width: 640px) {
+  .login-footer-message {
+    font-size: large;
+  }
 }
 
 .login-button {

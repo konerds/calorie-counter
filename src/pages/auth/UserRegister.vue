@@ -173,7 +173,7 @@ export default {
 }
 
 .register-item {
-  width: 30%;
+  width: 90%;
   height: 50%;
   border-radius: 60px;
   background-color: white;
@@ -182,6 +182,12 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 25%);
+}
+
+@media (min-width: 1024px) {
+  .register-item {
+    width: 60%;
+  }
 }
 
 .register-form {

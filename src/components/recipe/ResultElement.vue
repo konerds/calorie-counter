@@ -197,7 +197,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 .result-element-container {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 15%);
-  width: 16vw;
+  width: 100%;
 }
 
 .card-cover-container {
@@ -262,21 +262,38 @@ export default {
 }
 
 .result-detail-title-meta {
-  font-size: 0.6vw;
+  font-size: large;
   font-weight: bold;
   color: #f47b0f;
 }
 
 .result-detail-title-name {
-  font-size: 1.2vw;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: xx-large;
   font-family: 'Jua', sans-serif;
   text-align: center;
 }
 
 .result-detail-title-calorie {
-  font-size: 0.6vw;
+  font-size: large;
   color: #f47b0f;
   text-align: right;
   font-weight: bold;
+}
+
+@media (min-width: 640px) {
+  .result-detail-title-meta {
+    font-size: medium;
+  }
+
+  .result-detail-title-name {
+    font-size: x-large;
+  }
+
+  .result-detail-title-calorie {
+    font-size: medium;
+  }
 }
 </style>

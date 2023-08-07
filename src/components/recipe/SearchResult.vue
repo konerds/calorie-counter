@@ -102,25 +102,42 @@ export default {
 
 .header-title {
   margin: 0;
-  font-size: large;
+  font-size: x-large;
   font-family: 'Jua', sans-serif;
 }
 
 .result-item-container {
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(1, minmax(100px, 1fr));
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 3vh;
 }
 
+@media (min-width: 640px) {
+  .result-item-container {
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .result-item-container {
+    grid-template-columns: repeat(4, minmax(100px, 1fr));
+  }
+}
+
+@media (min-width: 1920px) {
+  .result-item-container {
+    grid-template-columns: repeat(5, minmax(100px, 1fr));
+  }
+}
+
 .result-item-element {
-  flex: 0 0 16vw;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
-  min-width: 16vw;
-  max-width: 16vw;
   padding-top: 20px;
 }
 </style>
