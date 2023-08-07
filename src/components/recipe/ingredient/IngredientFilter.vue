@@ -3,36 +3,33 @@
     <div class="filter-item">
       <a-avatar class="filter-item-element" :src="filterIcon" />
       <div class="filter-item-element">{{ ingredient[0].name }}</div>
-      <MinusOutlined
-        class="filter-item-element"
-        @click="unselectIngredient()"
-      />
+      <MinusOutlined class="filter-item-element" @click="unselectIngredient()" />
     </div>
   </div>
 </template>
 
 <script>
-import { MinusOutlined } from "@ant-design/icons-vue";
+import { MinusOutlined } from '@ant-design/icons-vue';
 export default {
-  emits: ["unselect"],
-  props: ["type", "ingredient"],
+  emits: ['unselect'],
+  props: ['type', 'ingredient'],
   components: {
-    MinusOutlined,
+    MinusOutlined
   },
   computed: {
     filterIcon() {
-      if (this.type === "exist") {
-        return require("@/assets/check-yes.svg");
+      if (this.type === 'exist') {
+        return require('@/assets/check-yes.svg');
       } else {
-        return require("@/assets/check-no.svg");
+        return require('@/assets/check-no.svg');
       }
-    },
+    }
   },
   methods: {
     unselectIngredient() {
-      this.$emit("unselect", this.ingredient[0].name, this.type);
-    },
-  },
+      this.$emit('unselect', this.ingredient[0].name, this.type);
+    }
+  }
 };
 </script>
 

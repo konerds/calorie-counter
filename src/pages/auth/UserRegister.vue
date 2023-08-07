@@ -9,14 +9,8 @@
       @finishFailed="handleFinishFailed"
     >
       <a-form-item class="register-form" has-feedback name="email">
-        <a-input
-          v-model:value.trim="authFormState.email"
-          type="email"
-          placeholder="이메일"
-        >
-          <template #prefix
-            ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+        <a-input v-model:value.trim="authFormState.email" type="email" placeholder="이메일">
+          <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
         </a-input>
       </a-form-item>
       <a-form-item class="register-form" has-feedback name="password">
@@ -26,9 +20,7 @@
           autocomplete="off"
           placeholder="비밀번호"
         >
-          <template #prefix
-            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          <template #prefix><LockOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
         </a-input-password>
       </a-form-item>
       <a-form-item class="register-form" has-feedback name="repassword">
@@ -38,9 +30,7 @@
           autocomplete="off"
           placeholder="비밀번호 확인"
         >
-          <template #prefix
-            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          <template #prefix><LockOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
         </a-input-password>
       </a-form-item>
       <a-form-item class="register-form" has-feedback name="nickname">
@@ -53,91 +43,87 @@
         </a-input>
       </a-form-item>
       <div class="register-form">
-        <a-button class="register-button" type="primary" html-type="submit"
-          >회원가입</a-button
-        >
+        <a-button class="register-button" type="primary" html-type="submit">회원가입</a-button>
       </div>
     </a-form>
   </div>
 </template>
 
 <script>
-import { ref, reactive } from "vue";
-import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
-import UserInfo from "../../store/models/UserInfo.js";
+import { ref, reactive } from 'vue';
+import { LockOutlined, UserOutlined } from '@ant-design/icons-vue';
+import UserInfo from '../../store/models/UserInfo.js';
 export default {
   components: {
     LockOutlined,
-    UserOutlined,
+    UserOutlined
   },
-  emits: ["show-error"],
+  emits: ['show-error'],
   data() {
     return {
       formRef: ref(),
       authFormState: reactive({
-        email: "",
-        password: "",
-        repassword: "",
-        nickname: "",
+        email: '',
+        password: '',
+        repassword: '',
+        nickname: ''
       }),
       rules: {
-        email: [
-          { required: true, validator: this.validateEmail, trigger: "change" },
-        ],
+        email: [{ required: true, validator: this.validateEmail, trigger: 'change' }],
         password: [
           {
             required: true,
             validator: this.validatePassword,
-            trigger: "change",
-          },
+            trigger: 'change'
+          }
         ],
         repassword: [
           {
             validator: this.validateRepassword,
-            trigger: "change",
-          },
+            trigger: 'change'
+          }
         ],
         nickname: [
           {
             required: true,
             validator: this.validateNickname,
-            trigger: "change",
-          },
-        ],
-      },
+            trigger: 'change'
+          }
+        ]
+      }
     };
   },
   methods: {
     async validateEmail(rule, value) {
-      if (value === "") {
-        return Promise.reject(new Error("이메일 주소를 입력해주세요"));
-      } else if (!value.includes("@")) {
-        return Promise.reject(new Error("올바른 이메일 주소를 입력해주세요"));
+      if (value === '') {
+        return Promise.reject(new Error('이메일 주소를 입력해주세요'));
+      } else if (!value.includes('@')) {
+        return Promise.reject(new Error('올바른 이메일 주소를 입력해주세요'));
       } else {
         return Promise.resolve();
       }
     },
     async validatePassword(rule, value) {
-      if (value === "") {
-        return Promise.reject(new Error("비밀번호를 입력해주세요"));
+      if (value === '') {
+        return Promise.reject(new Error('비밀번호를 입력해주세요'));
       } else if (value.length < 6) {
-        return Promise.reject(new Error("비밀번호는 최소 6자리 이상입니다"));
+        return Promise.reject(new Error('비밀번호는 최소 6자리 이상입니다'));
       } else {
         return Promise.resolve();
       }
     },
     async validateRepassword(rule, value) {
-      if (value === "" || value !== this.authFormState.password) {
-        return Promise.reject(new Error("비밀번호를 정확하게 입력해주세요"));
+      if (value === '' || value !== this.authFormState.password) {
+        return Promise.reject(new Error('비밀번호를 정확하게 입력해주세요'));
       } else if (value.length < 6) {
-        return Promise.reject(new Error("비밀번호는 최소 6자리 이상입니다"));
+        return Promise.reject(new Error('비밀번호는 최소 6자리 이상입니다'));
       } else {
         return Promise.resolve();
       }
     },
     async validateNickname(rule, value) {
-      if (value === "") {
-        return Promise.reject(new Error("닉네임을 입력해주세요"));
+      if (value === '') {
+        return Promise.reject(new Error('닉네임을 입력해주세요'));
       }
       return Promise.resolve();
     },
@@ -146,34 +132,32 @@ export default {
         state.fetching = true;
       });
       const actionPayload = {
-        mode: "signup",
+        mode: 'signup',
         email: values.email,
-        password: values.password,
+        password: values.password
       };
       try {
         await UserInfo.api().auth({
           ...actionPayload,
           nickname: values.nickname,
-          type: 0,
+          type: 0
         });
-        const redirectUrl = "/" + (this.$route.query.redirect || "search");
+        const redirectUrl = '/' + (this.$route.query.redirect || 'search');
         this.$router.replace(redirectUrl);
       } catch (authError) {
-        this.showError(
-          authError.message || "인증 과정에서 문제가 발생하였습니다"
-        );
+        this.showError(authError.message || '인증 과정에서 문제가 발생하였습니다');
       }
       UserInfo.commit((state) => {
         state.fetching = false;
       });
     },
     handleFinishFailed(errors) {
-      this.showError("입력 데이터를 다시 한 번 확인해주세요" || errors);
+      this.showError('입력 데이터를 다시 한 번 확인해주세요' || errors);
     },
     showError(error) {
-      this.$emit("show-error", error);
-    },
-  },
+      this.$emit('show-error', error);
+    }
+  }
 };
 </script>
 

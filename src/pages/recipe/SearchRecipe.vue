@@ -13,10 +13,7 @@
       <template #title>
         <span class="text-font text-title">레시피 수정하기</span>
       </template>
-      <update-recipe
-        @cancel="setUpdateRecipe(false)"
-        :recipe-name="nameForUpdate"
-      ></update-recipe>
+      <update-recipe @cancel="setUpdateRecipe(false)" :recipe-name="nameForUpdate"></update-recipe>
     </a-modal>
     <a-modal
       centered
@@ -55,23 +52,14 @@
       ><admin-control></admin-control>
     </a-drawer>
     <div class="search-container">
-      <div
-        v-if="isLoggedIn && getUser.type === 0"
-        class="cart-badge"
-        @click="toggleCartList"
-      >
+      <div v-if="isLoggedIn && getUser.type === 0" class="cart-badge" @click="toggleCartList">
         <a-badge :count="cartListSize">
           <div>
-            <ShoppingCartOutlined
-              :style="{ color: '#F47B0F', fontSize: '4vw' }"
-            />
+            <ShoppingCartOutlined :style="{ color: '#F47B0F', fontSize: '4vw' }" />
           </div>
         </a-badge>
       </div>
-      <search-filter
-        class="search-filter"
-        @show-result="showResult"
-      ></search-filter>
+      <search-filter class="search-filter" @show-result="showResult"></search-filter>
       <search-result
         class="search-result"
         v-if="selectedRecipe === null"
@@ -91,18 +79,18 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { ShoppingCartOutlined } from "@ant-design/icons-vue";
-import UserInfo from "../../store/models/UserInfo.js";
-import Recipe from "../../store/models/Recipe.js";
-import Ingredient from "../../store/models/Ingredient.js";
-import CartList from "../../components/cart/CartList.vue";
-import SearchFilter from "../../components/recipe/SearchFilter.vue";
-import SearchResult from "../../components/recipe/SearchResult.vue";
-import RecipeDetail from "../../components/recipe/RecipeDetail.vue";
-import CreateRecipe from "../../components/recipe/CreateRecipe.vue";
-import UpdateRecipe from "../../components/recipe/UpdateRecipe.vue";
-import AdminControl from "../../components/admin/AdminControl.vue";
+import { ref } from 'vue';
+import { ShoppingCartOutlined } from '@ant-design/icons-vue';
+import UserInfo from '../../store/models/UserInfo.js';
+import Recipe from '../../store/models/Recipe.js';
+import Ingredient from '../../store/models/Ingredient.js';
+import CartList from '../../components/cart/CartList.vue';
+import SearchFilter from '../../components/recipe/SearchFilter.vue';
+import SearchResult from '../../components/recipe/SearchResult.vue';
+import RecipeDetail from '../../components/recipe/RecipeDetail.vue';
+import CreateRecipe from '../../components/recipe/CreateRecipe.vue';
+import UpdateRecipe from '../../components/recipe/UpdateRecipe.vue';
+import AdminControl from '../../components/admin/AdminControl.vue';
 export default {
   components: {
     CartList,
@@ -112,18 +100,18 @@ export default {
     ShoppingCartOutlined,
     CreateRecipe,
     UpdateRecipe,
-    AdminControl,
+    AdminControl
   },
   data() {
     return {
       searchedResult: ref([]),
-      searchedKeyword: ref(""),
+      searchedKeyword: ref(''),
       selectedRecipe: ref(null),
       isVisibleCart: ref(false),
       isVisibleCreate: ref(false),
       isVisibleUpdate: ref(false),
       isVisibleAdmin: ref(false),
-      nameForUpdate: ref(""),
+      nameForUpdate: ref('')
     };
   },
   computed: {
@@ -133,7 +121,7 @@ export default {
           userId: null,
           nickname: null,
           token: null,
-          favoriteRecipe: [],
+          favoriteRecipe: []
         };
       } else {
         return UserInfo.all()[0];
@@ -143,18 +131,14 @@ export default {
       return !!this.getUser.token;
     },
     ingredients() {
-      return Ingredient.query()
-        .orderBy("name", "asc")
-        .get();
+      return Ingredient.query().orderBy('name', 'asc').get();
     },
     recipes() {
-      return Recipe.query()
-        .orderBy("name", "asc")
-        .get();
+      return Recipe.query().orderBy('name', 'asc').get();
     },
     cartListSize() {
       return this.getUser.favoriteRecipe.length;
-    },
+    }
   },
   methods: {
     showResult(result, keyword) {
@@ -188,8 +172,8 @@ export default {
       if (this.nameForUpdate.length > 0) {
         this.setUpdateRecipe(true);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -219,7 +203,7 @@ export default {
 }
 
 .text-font {
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: 'Nanum Gothic', sans-serif;
 }
 
 .text-title {

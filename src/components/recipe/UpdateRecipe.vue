@@ -36,41 +36,18 @@
           </div>
         </a-upload-dragger>
       </div>
-      <a-form-item
-        class="recipe-form"
-        has-feedback
-        name="name"
-        label="레시피 이름"
-      >
+      <a-form-item class="recipe-form" has-feedback name="name" label="레시피 이름">
         <a-input v-model:value.trim="recipeData.name" type="text">
           <template #prefix></template>
         </a-input>
       </a-form-item>
-      <a-form-item
-        class="recipe-form"
-        has-feedback
-        name="method"
-        label="조리 방식"
-      >
-        <a-input
-          v-model:value.trim="recipeData.method"
-          type="text"
-          autocomplete="off"
-        >
+      <a-form-item class="recipe-form" has-feedback name="method" label="조리 방식">
+        <a-input v-model:value.trim="recipeData.method" type="text" autocomplete="off">
           <template #prefix></template>
         </a-input>
       </a-form-item>
-      <a-form-item
-        class="recipe-form"
-        has-feedback
-        name="type"
-        label="레시피 종류"
-      >
-        <a-input
-          v-model:value.trim="recipeData.type"
-          type="text"
-          autocomplete="off"
-        >
+      <a-form-item class="recipe-form" has-feedback name="type" label="레시피 종류">
+        <a-input v-model:value.trim="recipeData.type" type="text" autocomplete="off">
           <template #prefix></template>
         </a-input>
       </a-form-item>
@@ -83,12 +60,9 @@
         @select="selectIngredient"
       >
         <template #options>
-          <a-select-option
-            v-for="ingredient in ingredients"
-            :key="ingredient.name"
-          >
+          <a-select-option v-for="ingredient in ingredients" :key="ingredient.name">
             <template #label>
-              <span style="margin-left: 0.5rem;">
+              <span style="margin-left: 0.5rem">
                 {{ ingredient.name }}
               </span>
             </template>
@@ -115,7 +89,7 @@
               v-model:value.trim="recipeData.ingredients[index].unit"
               type="number"
               placeholder="(g/mL)"
-              style="text-align:right;max-width:70%;"
+              style="text-align: right; max-width: 70%"
             >
               <template #addonBefore>{{ ingredient.name }}</template>
               <template #addonAfter>
@@ -149,53 +123,43 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import { ref, reactive } from "vue";
-import {
-  DeleteOutlined,
-  PlusOutlined,
-  EditOutlined,
-} from "@ant-design/icons-vue";
-import UserInfo from "../../store/models/UserInfo.js";
-import Ingredient from "../../store/models/Ingredient.js";
-import Recipe from "../../store/models/Recipe.js";
+import firebase from 'firebase/app';
+import { ref, reactive } from 'vue';
+import { DeleteOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons-vue';
+import UserInfo from '../../store/models/UserInfo.js';
+import Ingredient from '../../store/models/Ingredient.js';
+import Recipe from '../../store/models/Recipe.js';
 export default {
-  emits: ["show-error", "cancel"],
+  emits: ['show-error', 'cancel'],
   components: {
     DeleteOutlined,
     PlusOutlined,
-    EditOutlined,
+    EditOutlined
   },
-  props: ["recipe-name"],
+  props: ['recipe-name'],
   mounted() {
     this.onSelect(this.recipeName);
   },
   data() {
     return {
       formRef: ref(),
-      ingredientValue: ref(""),
+      ingredientValue: ref(''),
       recipeData: reactive({
-        name: "",
-        method: "",
-        type: "",
-        smallImg: "",
-        largeImg: "",
+        name: '',
+        method: '',
+        type: '',
+        smallImg: '',
+        largeImg: '',
         ingredients: [],
-        steps: [""],
+        steps: ['']
       }),
       rules: {
-        name: [
-          { required: true, validator: this.validateName, trigger: "change" },
-        ],
-        method: [
-          { required: true, validator: this.validateMethod, trigger: "change" },
-        ],
-        type: [
-          { required: true, validator: this.validateType, trigger: "change" },
-        ],
+        name: [{ required: true, validator: this.validateName, trigger: 'change' }],
+        method: [{ required: true, validator: this.validateMethod, trigger: 'change' }],
+        type: [{ required: true, validator: this.validateType, trigger: 'change' }]
       },
       isUploaded: ref(false),
-      imageData: ref(""),
+      imageData: ref('')
     };
   },
   computed: {
@@ -205,7 +169,7 @@ export default {
           userId: null,
           nickname: null,
           token: null,
-          favoriteRecipe: [],
+          favoriteRecipe: []
         };
       } else {
         return UserInfo.all()[0];
@@ -237,14 +201,12 @@ export default {
           }
           return true;
         })
-        .orderBy("name", "asc")
+        .orderBy('name', 'asc')
         .get();
     },
     recipes() {
-      return Recipe.query()
-        .orderBy("name", "asc")
-        .get();
-    },
+      return Recipe.query().orderBy('name', 'asc').get();
+    }
   },
   methods: {
     stepPlaceholder(index) {
@@ -259,20 +221,20 @@ export default {
       this.isUploaded = true;
     },
     async validateName(rule, value) {
-      if (this.recipeData.name === "") {
-        return Promise.reject(new Error("레시피 이름을 입력해주세요"));
+      if (this.recipeData.name === '') {
+        return Promise.reject(new Error('레시피 이름을 입력해주세요'));
       }
       return Promise.resolve();
     },
     async validateMethod(rule, value) {
-      if (this.recipeData.method === "") {
-        return Promise.reject(new Error("조리 방식을 입력해주세요"));
+      if (this.recipeData.method === '') {
+        return Promise.reject(new Error('조리 방식을 입력해주세요'));
       }
       return Promise.resolve();
     },
     async validateType(rule, value) {
-      if (this.recipeData.type === "") {
-        return Promise.reject(new Error("레시피 종류를 입력해주세요"));
+      if (this.recipeData.type === '') {
+        return Promise.reject(new Error('레시피 종류를 입력해주세요'));
       }
       return Promise.resolve();
     },
@@ -297,27 +259,27 @@ export default {
             smallImg: this.recipeData.smallImg,
             largeImg: this.recipeData.largeImg,
             ingredients: this.recipeData.ingredients,
-            steps: this.recipeData.steps,
-          },
+            steps: this.recipeData.steps
+          }
         };
         const result = await Recipe.api().updateRecipe(payload);
         if (result.response.data.error) {
-          this.showError("레시피를 수정하는 데 실패하였습니다!");
+          this.showError('레시피를 수정하는 데 실패하였습니다!');
         }
         Recipe.commit((state) => {
           state.fetching = false;
         });
-        this.$emit("cancel");
+        this.$emit('cancel');
       } else {
         const storageRef = firebase
           .storage()
           .ref(`recipes/${+Recipe.query().last().id}/${this.getUser.userId}`)
           .put(this.imageData);
         storageRef.on(
-          "state_changed",
+          'state_changed',
           (snapshot) => {},
           (error) => {
-            this.showError("이미지 업로드에 실패하였습니다" || error);
+            this.showError('이미지 업로드에 실패하였습니다' || error);
           },
           async () => {
             await firebase
@@ -331,38 +293,31 @@ export default {
                   token: this.getUser.token,
                   data: {
                     id: +Recipe.query().last().id,
-                    creator: [
-                      UserInfo.all()[0].userId,
-                      UserInfo.all()[0].nickname,
-                    ],
+                    creator: [UserInfo.all()[0].userId, UserInfo.all()[0].nickname],
                     name: values.name,
                     method: values.method,
                     type: values.type,
                     smallImg: url,
                     largeImg: url,
                     ingredients: this.recipeData.ingredients,
-                    steps: this.recipeData.steps,
-                  },
+                    steps: this.recipeData.steps
+                  }
                 };
                 const result = await Recipe.api().updateRecipe(payload);
                 if (result.response.data.error) {
-                  this.showError("레시피를 수정하는 데 실패하였습니다!");
+                  this.showError('레시피를 수정하는 데 실패하였습니다!');
                 }
                 Recipe.commit((state) => {
                   state.fetching = false;
                 });
-                this.$emit("cancel");
+                this.$emit('cancel');
               });
           }
         );
       }
     },
     onSelect(recipeName) {
-      const foundRecipe = this.cleanObject(
-        Recipe.query()
-          .where("name", recipeName)
-          .get()[0]
-      );
+      const foundRecipe = this.cleanObject(Recipe.query().where('name', recipeName).get()[0]);
       this.recipeData.name = foundRecipe.name;
       this.recipeData.method = foundRecipe.method;
       this.recipeData.type = foundRecipe.type;
@@ -376,10 +331,10 @@ export default {
       const ingredientData = this.cleanObject(this.recipeData.ingredients);
       ingredientData.push({
         name: name,
-        unit: "",
+        unit: ''
       });
       this.recipeData.ingredients = ingredientData;
-      this.ingredientValue = "";
+      this.ingredientValue = '';
     },
     deleteStep(index) {
       const steps = this.cleanObject(this.recipeData.steps);
@@ -392,15 +347,15 @@ export default {
       this.recipeData.ingredients = ingredients;
     },
     handleFinishFailed(errors) {
-      this.showError("입력 데이터를 다시 한 번 확인해주세요" || errors);
+      this.showError('입력 데이터를 다시 한 번 확인해주세요' || errors);
     },
     showError(error) {
-      this.$emit("show-error", error);
+      this.$emit('show-error', error);
     },
     cleanObject(object) {
       return JSON.parse(JSON.stringify(object));
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -473,7 +428,7 @@ export default {
   padding-right: 1.2vw;
   padding-top: 1.3vh;
   padding-bottom: 1.1vh;
-  font-family: "Jua", sans-serif;
+  font-family: 'Jua', sans-serif;
   background-color: #3ddbf7;
   border-color: transparent;
   font-size: 1.5vw;
@@ -481,6 +436,6 @@ export default {
 }
 
 .text-font {
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: 'Nanum Gothic', sans-serif;
 }
 </style>

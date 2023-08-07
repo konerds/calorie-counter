@@ -2,14 +2,14 @@
   <a-row class="header-container">
     <a-col class="header-item">
       <router-link to="/search"
-        ><img :src="require('@/assets/logo.jpg')" :width="140" />
+        ><img src="/assets/logo.jpg" :width="140" />
       </router-link>
     </a-col>
     <a-col class="header-item"></a-col>
     <a-col class="header-item">
       <div id="auth-btn">
         <router-link v-if="!isLoggedIn" to="/auth"
-          ><a-avatar :src="require('@/assets/account.svg')" :size="75" />
+          ><a-avatar src="/assets/account.svg" :size="75" />
         </router-link>
         <div v-else>
           <a-dropdown-button>
@@ -20,19 +20,11 @@
                   <LogoutOutlined />
                   <span class="menu-text">로그아웃</span>
                 </a-menu-item>
-                <a-menu-item
-                  v-if="getUser.type === 0"
-                  key="create"
-                  @click="showCreateRecipe"
-                >
+                <a-menu-item v-if="getUser.type === 0" key="create" @click="showCreateRecipe">
                   <AppstoreAddOutlined />
                   <span class="menu-text">나만의 레시피 만들기</span>
                 </a-menu-item>
-                <a-menu-item
-                  v-if="getUser.type === 1"
-                  key="admin"
-                  @click="showAdmin"
-                >
+                <a-menu-item v-if="getUser.type === 1" key="admin" @click="showAdmin">
                   <SettingOutlined />
                   관리자 페이지
                 </a-menu-item>
@@ -46,21 +38,21 @@
 </template>
 
 <script>
-import UserInfo from "../../store/models/UserInfo.js";
+import UserInfo from '../../store/models/UserInfo.js';
 import {
   UserOutlined,
   AppstoreAddOutlined,
   LogoutOutlined,
-  SettingOutlined,
-} from "@ant-design/icons-vue";
+  SettingOutlined
+} from '@ant-design/icons-vue';
 export default {
   components: {
     UserOutlined,
     AppstoreAddOutlined,
     LogoutOutlined,
-    SettingOutlined,
+    SettingOutlined
   },
-  emits: ["show-create", "show-admin"],
+  emits: ['show-create', 'show-admin'],
   computed: {
     getUser() {
       if (UserInfo.all().length === 0) {
@@ -68,7 +60,7 @@ export default {
           userId: null,
           nickname: null,
           token: null,
-          favoriteRecipe: [],
+          favoriteRecipe: []
         };
       } else {
         return UserInfo.all()[0];
@@ -79,26 +71,26 @@ export default {
     },
     userNickname() {
       return this.getUser.nickname;
-    },
+    }
   },
   methods: {
     logout() {
       UserInfo.deleteAll();
-      this.$router.replace("/auth");
+      this.$router.replace('/auth');
     },
     showCreateRecipe() {
-      this.$emit("show-create");
+      this.$emit('show-create');
     },
     showAdmin() {
-      this.$emit("show-admin", true);
-    },
-  },
+      this.$emit('show-admin', true);
+    }
+  }
 };
 </script>
 
 <style scoped>
 * {
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: 'Nanum Gothic', sans-serif;
 }
 
 .header-container {
@@ -118,7 +110,7 @@ export default {
 }
 
 .menu-text {
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: 'Nanum Gothic', sans-serif;
 }
 
 a,

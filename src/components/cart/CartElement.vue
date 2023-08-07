@@ -8,12 +8,11 @@
             v-if="isLoggedIn && getUser.type === 0"
             @click="toggleCart"
             ><CheckCircleOutlined
-              style="font-size:0.6vw;line-height:0.6vw;margin:auto;"
+              style="font-size: 0.6vw; line-height: 0.6vw; margin: auto"
               v-if="!isInCart"
-            /><CloseCircleOutlined
-              style="font-size:0.6vw;line-height:0.6vw;"
-              v-else
-            />{{ toggleCartLabel }}</a-button
+            /><CloseCircleOutlined style="font-size: 0.6vw; line-height: 0.6vw" v-else />{{
+              toggleCartLabel
+            }}</a-button
           >
           <img
             class="cover-image"
@@ -22,9 +21,7 @@
           /></div
       ></a-card-grid>
       <a-card-grid class="cart-detail-title" :hoverable="false">
-        <div class="cart-detail-title-meta">
-          {{ result.type }} / {{ result.method }}
-        </div>
+        <div class="cart-detail-title-meta">{{ result.type }} / {{ result.method }}</div>
         <div class="cart-detail-title-name">{{ result.name }}</div>
         <div class="cart-detail-title-calorie">{{ result.calorie }} 칼로리</div>
       </a-card-grid>
@@ -44,9 +41,7 @@
               disabled
             >
               <template #addonBefore>{{ item.name }}</template>
-              <template #addonAfter>
-                (g/mL)
-              </template>
+              <template #addonAfter> (g/mL) </template>
             </a-input>
           </a-list-item>
         </template>
@@ -56,17 +51,14 @@
 </template>
 
 <script>
-import UserInfo from "../../store/models/UserInfo.js";
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons-vue";
+import UserInfo from '../../store/models/UserInfo.js';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
 export default {
-  emits: ["show-error"],
-  props: ["result", "bordered"],
+  emits: ['show-error'],
+  props: ['result', 'bordered'],
   components: {
     CheckCircleOutlined,
-    CloseCircleOutlined,
+    CloseCircleOutlined
   },
   computed: {
     getUser() {
@@ -75,7 +67,7 @@ export default {
           userId: null,
           nickname: null,
           token: null,
-          favoriteRecipe: [],
+          favoriteRecipe: []
         };
       } else {
         return UserInfo.all()[0];
@@ -99,15 +91,15 @@ export default {
     },
     toggleCartLabel() {
       if (this.isInCart) {
-        return "장바구니에서 제외";
+        return '장바구니에서 제외';
       } else {
-        return "장바구니에 추가";
+        return '장바구니에 추가';
       }
-    },
+    }
   },
   methods: {
     showError(error) {
-      this.$emit("show-error", error);
+      this.$emit('show-error', error);
     },
     async toggleCart() {
       UserInfo.commit((state) => {
@@ -117,16 +109,16 @@ export default {
       if (this.isInCart !== false) {
         prevFavoriteRecipe.splice(this.isInCart, 1);
         if (prevFavoriteRecipe === []) {
-          prevFavoriteRecipe = "";
+          prevFavoriteRecipe = '';
         }
         const payload = {
           userId: this.getUser.userId,
           token: this.getUser.token,
-          data: { favoriteRecipe: prevFavoriteRecipe },
+          data: { favoriteRecipe: prevFavoriteRecipe }
         };
         const fetchResult = await UserInfo.api().toggleCart(payload);
         if (fetchResult.response.data.error) {
-          this.showError("레시피를 장바구니에서 삭제하는 데 실패하였습니다!");
+          this.showError('레시피를 장바구니에서 삭제하는 데 실패하였습니다!');
         }
       } else {
         if (this.userFavoriteRecipe.length === 0) {
@@ -136,30 +128,27 @@ export default {
         const payload = {
           userId: this.getUser.userId,
           token: this.getUser.token,
-          data: { favoriteRecipe: prevFavoriteRecipe },
+          data: { favoriteRecipe: prevFavoriteRecipe }
         };
         const fetchResult = await UserInfo.api().toggleCart(payload);
         if (fetchResult.response.data.error) {
-          this.showError("레시피를 장바구니에 추가하는 데 실패하였습니다!");
+          this.showError('레시피를 장바구니에 추가하는 데 실패하였습니다!');
         }
       }
-      const fetchResult = await UserInfo.api().fetch(
-        this.getUser.userId,
-        this.getUser.token
-      );
+      const fetchResult = await UserInfo.api().fetch(this.getUser.userId, this.getUser.token);
       if (fetchResult.response.data.error) {
-        this.showError("사용자 정보를 불러올 수 없습니다!");
+        this.showError('사용자 정보를 불러올 수 없습니다!');
       }
       UserInfo.commit((state) => {
         state.fetching = false;
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 .cart-element-container {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 15%);
   width: 100%;
@@ -225,7 +214,7 @@ export default {
   font-size: 2.8vw;
   line-height: 2.8vw;
   text-align: center;
-  font-family: "Jua", sans-serif;
+  font-family: 'Jua', sans-serif;
 }
 
 .cart-detail-title-calorie {

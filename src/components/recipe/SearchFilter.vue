@@ -17,7 +17,7 @@
           <template #options>
             <a-select-option v-for="keyword in keywords" :key="keyword">
               <template #label>
-                <span style="margin-left: 0.5rem;">
+                <span style="margin-left: 0.5rem">
                   {{ keyword }}
                 </span>
               </template>
@@ -43,12 +43,9 @@
           @select="selectExistIngredient"
         >
           <template #options>
-            <a-select-option
-              v-for="ingredient in ingredients"
-              :key="ingredient.name"
-            >
+            <a-select-option v-for="ingredient in ingredients" :key="ingredient.name">
               <template #label>
-                <span style="margin-left: 0.5rem;">
+                <span style="margin-left: 0.5rem">
                   {{ ingredient.name }}
                 </span>
               </template>
@@ -62,10 +59,7 @@
           ></a-input>
         </a-auto-complete>
       </div>
-      <div
-        v-if="selectedExistIngredients.length !== 0"
-        class="line-break search-filter"
-      >
+      <div v-if="selectedExistIngredients.length !== 0" class="line-break search-filter">
         <div
           class="search-filter-item"
           v-for="selectedExistIngredient in selectedExistIngredients"
@@ -88,12 +82,9 @@
           @select="selectNotExistIngredient"
         >
           <template #options>
-            <a-select-option
-              v-for="ingredient in ingredients"
-              :key="ingredient.name"
-            >
+            <a-select-option v-for="ingredient in ingredients" :key="ingredient.name">
               <template #label>
-                <span style="margin-left: 0.5rem;">
+                <span style="margin-left: 0.5rem">
                   {{ ingredient.name }}
                 </span>
               </template>
@@ -104,10 +95,7 @@
           </a-input>
         </a-auto-complete>
       </div>
-      <div
-        v-if="selectedNotExistIngredients.length !== 0"
-        class="line-break search-filter"
-      >
+      <div v-if="selectedNotExistIngredients.length !== 0" class="line-break search-filter">
         <div
           class="search-filter-item"
           v-for="selectedNotExistIngredient in selectedNotExistIngredients"
@@ -128,41 +116,35 @@
         ></a-input>
       </div>
       <div class="line-break search-filter">
-        <a-button class="search-button" @click="searchRecipe()"
-          >검색 <SearchOutlined
-        /></a-button>
+        <a-button class="search-button" @click="searchRecipe()">검색 <SearchOutlined /></a-button>
       </div>
     </a-card>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
-import {
-  SearchOutlined,
-  PlusOutlined,
-  MinusOutlined,
-} from "@ant-design/icons-vue";
-import IngredientFilter from "./ingredient/IngredientFilter";
-import Ingredient from "../../store/models/Ingredient.js";
-import Recipe from "../../store/models/Recipe.js";
+import { ref } from 'vue';
+import { SearchOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons-vue';
+import IngredientFilter from './ingredient/IngredientFilter.vue';
+import Ingredient from '../../store/models/Ingredient.js';
+import Recipe from '../../store/models/Recipe.js';
 export default {
-  emits: ["show-result"],
+  emits: ['show-result'],
   components: {
     SearchOutlined,
     PlusOutlined,
     MinusOutlined,
-    IngredientFilter,
+    IngredientFilter
   },
   data() {
     return {
-      keywordValue: ref(""),
-      existIngredientValue: ref(""),
-      notExistIngredientValue: ref(""),
-      searchText: ref(""),
+      keywordValue: ref(''),
+      existIngredientValue: ref(''),
+      notExistIngredientValue: ref(''),
+      searchText: ref(''),
       selectedExistIngredients: ref([]),
       selectedNotExistIngredients: ref([]),
-      maxCalorie: ref(""),
+      maxCalorie: ref('')
     };
   },
   computed: {
@@ -182,14 +164,12 @@ export default {
             }
             if (this.selectedNotExistIngredients.length > 0) {
               if (
-                this.selectedNotExistIngredients.filter(
-                  (notExistIngredient) => {
-                    if (notExistIngredient[0].name === ingredient.name) {
-                      return true;
-                    }
-                    return false;
+                this.selectedNotExistIngredients.filter((notExistIngredient) => {
+                  if (notExistIngredient[0].name === ingredient.name) {
+                    return true;
                   }
-                ).length > 0
+                  return false;
+                }).length > 0
               ) {
                 return false;
               }
@@ -199,13 +179,11 @@ export default {
           }
           return true;
         })
-        .orderBy("name", "asc")
+        .orderBy('name', 'asc')
         .get();
     },
     recipes() {
-      return Recipe.query()
-        .orderBy("name", "asc")
-        .get();
+      return Recipe.query().orderBy('name', 'asc').get();
     },
     keywords() {
       const keywords = [];
@@ -217,48 +195,39 @@ export default {
         keywords.push(ingredients[indexIngredient].name);
       }
       const filteredKeywords = keywords.filter((keyword) => {
-        if (this.searchText === "") {
+        if (this.searchText === '') {
           return false;
         }
         return true;
       });
 
       return [...new Set(filteredKeywords)];
-    },
+    }
   },
   watch: {
     maxCalorie(val, preVal) {
       const reg = /^-?\d*(\.\d*)?$/;
-      if ((!isNaN(+val) && reg.test(val)) || val === "" || val === "-") {
+      if ((!isNaN(+val) && reg.test(val)) || val === '' || val === '-') {
         this.maxCalorie = val;
       } else {
         this.maxCalorie = preVal;
       }
-    },
+    }
   },
   methods: {
     async searchRecipe() {
       const searchedResult = await Recipe.query()
         .where((recipe) => {
-          if (
-            +recipe.calorie > +this.maxCalorie &&
-            this.maxCalorie.length !== 0
-          ) {
+          if (+recipe.calorie > +this.maxCalorie && this.maxCalorie.length !== 0) {
             return false;
           }
-          if (
-            recipe.name === this.searchText ||
-            recipe.name.includes(this.searchText)
-          ) {
+          if (recipe.name === this.searchText || recipe.name.includes(this.searchText)) {
             let isExistFiltered = true;
             if (this.selectedExistIngredients.length > 0) {
               isExistFiltered =
                 recipe.ingredients.filter((ingredient) => {
                   for (let key in this.selectedExistIngredients) {
-                    if (
-                      this.selectedExistIngredients[key][0].name ===
-                      ingredient.name
-                    ) {
+                    if (this.selectedExistIngredients[key][0].name === ingredient.name) {
                       return true;
                     }
                   }
@@ -270,10 +239,7 @@ export default {
               isNotExistFiltered =
                 recipe.ingredients.filter((ingredient) => {
                   for (let key in this.selectedNotExistIngredients) {
-                    if (
-                      this.selectedNotExistIngredients[key][0].name ===
-                      ingredient.name
-                    ) {
+                    if (this.selectedNotExistIngredients[key][0].name === ingredient.name) {
                       return false;
                     }
                   }
@@ -288,49 +254,37 @@ export default {
           return false;
         })
         .get();
-      this.$emit("show-result", searchedResult, this.searchText);
+      this.$emit('show-result', searchedResult, this.searchText);
     },
     selectExistIngredient(name) {
-      this.selectedExistIngredients.push(
-        Ingredient.query()
-          .where("name", name)
-          .get()
-      );
-      this.existIngredientValue = "";
+      this.selectedExistIngredients.push(Ingredient.query().where('name', name).get());
+      this.existIngredientValue = '';
     },
     selectNotExistIngredient(name) {
-      this.selectedNotExistIngredients.push(
-        Ingredient.query()
-          .where("name", name)
-          .get()
-      );
-      this.notExistIngredientValue = "";
+      this.selectedNotExistIngredients.push(Ingredient.query().where('name', name).get());
+      this.notExistIngredientValue = '';
     },
     unselectIngredient(name, type) {
-      if (type === "exist") {
-        this.selectedExistIngredients = this.selectedExistIngredients.filter(
-          (ingredient) => {
-            if (ingredient[0].name === name) {
-              return false;
-            }
-            return true;
+      if (type === 'exist') {
+        this.selectedExistIngredients = this.selectedExistIngredients.filter((ingredient) => {
+          if (ingredient[0].name === name) {
+            return false;
           }
-        );
+          return true;
+        });
       } else {
-        this.selectedNotExistIngredients = this.selectedNotExistIngredients.filter(
-          (ingredient) => {
-            if (ingredient[0].name === name) {
-              return false;
-            }
-            return true;
+        this.selectedNotExistIngredients = this.selectedNotExistIngredients.filter((ingredient) => {
+          if (ingredient[0].name === name) {
+            return false;
           }
-        );
+          return true;
+        });
       }
     },
     onSelect(searchText) {
       this.searchText = searchText;
-    },
-  },
+    }
+  }
 };
 </script>
 

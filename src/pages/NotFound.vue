@@ -1,9 +1,7 @@
 <template>
   <section class="not-found-container">
     <a-card title="오류">
-      <p>
-        존재하지 않는 페이지 또는 잘못된 접근입니다!
-      </p>
+      <p>존재하지 않는 페이지 또는 잘못된 접근입니다!</p>
     </a-card>
   </section>
 </template>

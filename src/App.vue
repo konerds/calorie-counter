@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="app">
+  <a-layout id="app" :style="{ backgroundImage: '/assets/background.jpg' }">
     <a-modal
       centered
       :closable="false"
@@ -7,18 +7,13 @@
       :visible="isFetchingRecipes || isFetchingIngredients || isFetchingUser"
     >
       <template #title>
-        <div class="loading-modal-title">
-          데이터를 준비하고 있습니다!
-        </div>
+        <div class="loading-modal-title">데이터를 준비하고 있습니다!</div>
       </template>
       <a-spin class="loading-modal-spin" tip="Loading..." />
     </a-modal>
     <page-error :error="error" @init-error="initError"></page-error>
     <a-layout-header>
-      <the-header
-        @show-create="showCreate()"
-        @show-admin="showAdmin"
-      ></the-header>
+      <the-header @show-create="showCreate()" @show-admin="showAdmin"></the-header>
     </a-layout-header>
     <a-layout-content>
       <router-view v-slot="slotProps">
@@ -36,18 +31,18 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import Recipe from "./store/models/Recipe.js";
-import Ingredient from "./store/models/Ingredient.js";
-import TheHeader from "./components/layout/TheHeader.vue";
-import PageError from "./components/ui/PageError.vue";
+import { ref } from 'vue';
+import Recipe from './store/models/Recipe.js';
+import Ingredient from './store/models/Ingredient.js';
+import TheHeader from './components/layout/TheHeader.vue';
+import PageError from './components/ui/PageError.vue';
 export default {
-  name: "My Fridge Planner",
+  name: 'My Fridge Planner',
   components: { TheHeader, PageError },
   data() {
     return {
       error: ref(null),
-      componentRef: ref(),
+      componentRef: ref()
     };
   },
   created() {
@@ -63,7 +58,7 @@ export default {
     },
     isFetchingUser() {
       return this.$store.state.database.userinfo.fetching;
-    },
+    }
   },
   methods: {
     async fetchRecipes() {
@@ -72,7 +67,7 @@ export default {
       });
       const fetchResult = await Recipe.api().fetch();
       if (fetchResult.response.data.error) {
-        this.error = "레시피 정보를 불러올 수 없습니다!";
+        this.error = '레시피 정보를 불러올 수 없습니다!';
       }
       Recipe.commit((state) => {
         state.fetching = false;
@@ -84,7 +79,7 @@ export default {
       });
       const fetchResult = await Ingredient.api().fetch();
       if (fetchResult.response.data.error) {
-        this.error = "재료 정보를 불러올 수 없습니다!";
+        this.error = '재료 정보를 불러올 수 없습니다!';
       }
       Ingredient.commit((state) => {
         state.fetching = false;
@@ -101,19 +96,18 @@ export default {
     },
     showAdmin(isShow) {
       this.$refs.componentRef.setAdminPage(isShow);
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR&family=Playfair+Display+SC&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR&family=Playfair+Display+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
 #app {
   text-align: center;
-  background-image: url("~@/assets/background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -123,7 +117,7 @@ export default {
 #app > * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: 'Nanum Gothic', sans-serif;
 }
 
 #app .ant-layout-header {
@@ -142,13 +136,13 @@ export default {
 }
 
 .loading-modal-title {
-  font-family: "Jua", sans-serif;
+  font-family: 'Jua', sans-serif;
   font-size: 1.1vw;
 }
 
 .loading-modal-spin {
   width: 100%;
-  font-family: "Playfair Display SC", serif;
+  font-family: 'Playfair Display SC', serif;
   font-size: 0.9vw;
   text-align: center;
 }

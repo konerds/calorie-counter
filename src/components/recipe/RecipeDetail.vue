@@ -5,14 +5,10 @@
         <template #title>
           <a-row class="detail-header-container">
             <a-col class="detail-header-item">
-              <a-button @click="hideRecipe"
-                >레시피 검색 결과로 돌아가기</a-button
-              >
+              <a-button @click="hideRecipe">레시피 검색 결과로 돌아가기</a-button>
             </a-col>
             <a-col class="detail-header-item">
-              <span class="recipe-name"
-                >{{ recipe.name }} / {{ recipe.type }}</span
-              >
+              <span class="recipe-name">{{ recipe.name }} / {{ recipe.type }}</span>
             </a-col>
             <a-col class="detail-header-item">
               {{ recipeHeader }}
@@ -37,9 +33,7 @@
           </a-col>
           <a-col class="info-card-container">
             <a-card class="info-card">
-              <template #title>
-                필요한 재료
-              </template>
+              <template #title> 필요한 재료 </template>
               <div v-for="ingredient in recipe.ingredients" :key="ingredient">
                 <div v-if="ingredient.name.length !== 0">
                   {{ ingredient.name }} : {{ ingredient.unit }}
@@ -50,9 +44,7 @@
           </a-col>
           <a-col class="info-card-container">
             <a-card class="info-card">
-              <template #title>
-                조리 방법
-              </template>
+              <template #title> 조리 방법 </template>
               <div v-for="description in recipe.steps" :key="description">
                 <p>{{ description }}</p>
               </div>
@@ -65,23 +57,23 @@
 </template>
 
 <script>
-import Ingredient from "../../store/models/Ingredient.js";
+import Ingredient from '../../store/models/Ingredient.js';
 export default {
-  emits: ["hide-recipe"],
-  props: ["recipe"],
+  emits: ['hide-recipe'],
+  props: ['recipe'],
   computed: {
     recipeHeader() {
       let creator = this.recipe.creator;
-      if (creator !== "식품나라(공공데이터)") {
+      if (creator !== '식품나라(공공데이터)') {
         creator = this.recipe.creator[1];
       }
-      return "[" + this.recipe.method + "] / " + creator + "님 제공";
+      return '[' + this.recipe.method + '] / ' + creator + '님 제공';
     },
     recipeCalorieInfo() {
       if (this.recipeNutrition.calorie.length !== 0) {
-        return this.recipeNutrition.calorie + " 칼로리";
+        return this.recipeNutrition.calorie + ' 칼로리';
       } else {
-        return "칼로리 정보 부족";
+        return '칼로리 정보 부족';
       }
     },
     recipeNutrition() {
@@ -98,9 +90,7 @@ export default {
         this.recipe.sodium === 0
       ) {
         for (let ingredient in this.recipe.ingredients) {
-          const calorieMeta = Ingredient.query()
-            .where("name", ingredient.name)
-            .get();
+          const calorieMeta = Ingredient.query().where('name', ingredient.name).get();
           const calorieByUnit =
             +calorieMeta.carbByUnit * 4 +
             +calorieMeta.proteinByUnit * 4 +
@@ -120,43 +110,43 @@ export default {
         totalSodium = this.recipe.sodium;
       }
       if (totalCarb.length === 0) {
-        totalCarb = "재료 정보 부족";
+        totalCarb = '재료 정보 부족';
       }
       if (totalProtein.length === 0) {
-        totalProtein = "재료 정보 부족";
+        totalProtein = '재료 정보 부족';
       }
       if (totalFat.length === 0) {
-        totalFat = "재료 정보 부족";
+        totalFat = '재료 정보 부족';
       }
       if (totalSodium.length === 0) {
-        totalSodium = "재료 정보 부족";
+        totalSodium = '재료 정보 부족';
       }
       return {
         calorie: totalCalorie,
         carb: totalCarb,
         protein: totalProtein,
         fat: totalFat,
-        sodium: totalSodium,
+        sodium: totalSodium
       };
-    },
+    }
   },
   methods: {
     nutritionUnit(unit) {
       if (/^[0-9]+$/.test(unit)) {
-        return "g/mL";
+        return 'g/mL';
       } else {
-        return "";
+        return '';
       }
     },
     hideRecipe() {
-      this.$emit("hide-recipe");
-    },
-  },
+      this.$emit('hide-recipe');
+    }
+  }
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 .detail-container {
   background-color: white;
@@ -174,7 +164,7 @@ export default {
 .recipe-name {
   font-size: 3.5vw;
   line-height: 3.5vw;
-  font-family: "Jua", sans-serif;
+  font-family: 'Jua', sans-serif;
 }
 
 .detail-header-item:nth-child(2) {

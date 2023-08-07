@@ -5,11 +5,7 @@
         {{ headerMessage }}
       </p>
       <div class="result-item-container">
-        <div
-          class="result-item-element"
-          v-for="result in filteredResult"
-          :key="result"
-        >
+        <div class="result-item-element" v-for="result in filteredResult" :key="result">
           <result-element
             type="search-list"
             :result="result"
@@ -28,9 +24,7 @@
         @showSizeChange="onShowSizeChange"
       >
         <template #buildOptionText="props">
-          <span v-if="props.value !== '50'"
-            >페이지 당 {{ props.value }}개 조회</span
-          >
+          <span v-if="props.value !== '50'">페이지 당 {{ props.value }}개 조회</span>
           <span v-else>페이지 당 {{ props.value }}개 조회</span>
         </template>
       </a-pagination>
@@ -39,20 +33,20 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import Recipe from "../../store/models/Recipe.js";
-import ResultElement from "./ResultElement.vue";
+import { ref } from 'vue';
+import Recipe from '../../store/models/Recipe.js';
+import ResultElement from './ResultElement.vue';
 export default {
   components: {
-    ResultElement,
+    ResultElement
   },
-  props: ["searched-result", "keyword"],
-  emits: ["show-detail", "update-recipe"],
+  props: ['searched-result', 'keyword'],
+  emits: ['show-detail', 'update-recipe'],
   data() {
     return {
       currentPage: ref(1),
       pageSize: ref(12),
-      pageSizeOptions: ref(["12", "24", "36", "48", "60"]),
+      pageSizeOptions: ref(['12', '24', '36', '48', '60'])
     };
   },
   computed: {
@@ -74,39 +68,33 @@ export default {
       return result;
     },
     headerMessage() {
-      if (this.keyword === "") {
-        return "총 " + this.rawResult.length + " 개의 레시피가 존재합니다";
+      if (this.keyword === '') {
+        return '총 ' + this.rawResult.length + ' 개의 레시피가 존재합니다';
       } else if (this.rawResult.length === 0) {
-        return (
-          `"` + this.keyword + `" 키워드에 대한 레시피 검색 결과가 없습니다`
-        );
+        return `"` + this.keyword + `" 키워드에 대한 레시피 검색 결과가 없습니다`;
       } else {
         return (
-          `"` +
-          this.keyword +
-          `" 키워드에 대한 ` +
-          this.rawResult.length +
-          "개의 레시피 검색 결과"
+          `"` + this.keyword + `" 키워드에 대한 ` + this.rawResult.length + '개의 레시피 검색 결과'
         );
       }
-    },
+    }
   },
   methods: {
     showDetail(recipeId) {
-      this.$emit("show-detail", recipeId);
+      this.$emit('show-detail', recipeId);
     },
     onShowSizeChange(currentPage, pageSize) {
       this.pageSize = pageSize;
     },
     updateRecipe(recipeName) {
-      this.$emit("update-recipe", recipeName);
-    },
-  },
+      this.$emit('update-recipe', recipeName);
+    }
+  }
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 .result-container {
   width: 100%;
   background-color: #d5e3e6;
@@ -115,7 +103,7 @@ export default {
 .header-title {
   margin: 0;
   font-size: large;
-  font-family: "Jua", sans-serif;
+  font-family: 'Jua', sans-serif;
 }
 
 .result-item-container {

@@ -1,10 +1,5 @@
 <template>
-  <a-card
-    class="result-element-container"
-    bodyStyle="width:100%"
-    bordered
-    @click="showDetail"
-  >
+  <a-card class="result-element-container" bodyStyle="width:100%" bordered @click="showDetail">
     <template #cover>
       <div class="card-cover-container">
         <a-button
@@ -17,44 +12,35 @@
             }
           "
           ><CheckCircleOutlined
-            style="font-size:0.6vw;line-height:0.6vw;margin:auto;"
+            style="font-size: 0.6vw; line-height: 0.6vw; margin: auto"
             v-if="!isInCart"
-          /><CloseCircleOutlined
-            style="font-size:0.6vw;line-height:0.6vw;"
-            v-else
-          />{{ toggleCartLabel }}</a-button
+          /><CloseCircleOutlined style="font-size: 0.6vw; line-height: 0.6vw" v-else />{{
+            toggleCartLabel
+          }}</a-button
         >
         <a-button
           class="update-recipe-button"
-          v-if="
-            getUser.type === 1 ||
-              (isLoggedIn && getUser.type === 0 && isCreator)
-          "
+          v-if="getUser.type === 1 || (isLoggedIn && getUser.type === 0 && isCreator)"
           @click="
             (event) => {
               updateRecipe();
               event.stopImmediatePropagation();
             }
           "
-          ><EditOutlined
-            style="font-size:0.6vw;line-height:0.6vw;margin:auto;"
-          />레시피 편집</a-button
+          ><EditOutlined style="font-size: 0.6vw; line-height: 0.6vw; margin: auto" />레시피
+          편집</a-button
         >
         <a-button
           class="delete-recipe-button"
-          v-if="
-            getUser.type === 1 ||
-              (isLoggedIn && getUser.type === 0 && isCreator)
-          "
+          v-if="getUser.type === 1 || (isLoggedIn && getUser.type === 0 && isCreator)"
           @click="
             (event) => {
               deleteRecipe();
               event.stopImmediatePropagation();
             }
           "
-          ><DeleteOutlined
-            style="font-size:0.6vw;line-height:0.6vw;margin:auto;"
-          />레시피 삭제</a-button
+          ><DeleteOutlined style="font-size: 0.6vw; line-height: 0.6vw; margin: auto" />레시피
+          삭제</a-button
         >
         <img
           class="cover-image"
@@ -67,13 +53,9 @@
       <template #title>
         <a-row>
           <a-col class="result-detail-title-container">
-            <p class="result-detail-title-meta">
-              {{ result.type }} / {{ result.method }}
-            </p>
+            <p class="result-detail-title-meta">{{ result.type }} / {{ result.method }}</p>
             <p class="result-detail-title-name">{{ result.name }}</p>
-            <p class="result-detail-title-calorie">
-              {{ result.calorie }} 칼로리
-            </p>
+            <p class="result-detail-title-calorie">{{ result.calorie }} 칼로리</p>
           </a-col>
         </a-row>
       </template>
@@ -82,22 +64,22 @@
 </template>
 
 <script>
-import UserInfo from "../../store/models/UserInfo.js";
-import Recipe from "../../store/models/Recipe.js";
+import UserInfo from '../../store/models/UserInfo.js';
+import Recipe from '../../store/models/Recipe.js';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons-vue";
+  DeleteOutlined
+} from '@ant-design/icons-vue';
 export default {
-  emits: ["show-detail", "show-error", "update-recipe"],
-  props: ["result", "bordered"],
+  emits: ['show-detail', 'show-error', 'update-recipe'],
+  props: ['result', 'bordered'],
   components: {
     CheckCircleOutlined,
     CloseCircleOutlined,
     EditOutlined,
-    DeleteOutlined,
+    DeleteOutlined
   },
   computed: {
     getUser() {
@@ -106,7 +88,7 @@ export default {
           userId: null,
           nickname: null,
           token: null,
-          favoriteRecipe: [],
+          favoriteRecipe: []
         };
       } else {
         return UserInfo.all()[0];
@@ -130,9 +112,9 @@ export default {
     },
     toggleCartLabel() {
       if (this.isInCart) {
-        return "장바구니에서 제외";
+        return '장바구니에서 제외';
       } else {
-        return "장바구니에 추가";
+        return '장바구니에 추가';
       }
     },
     isCreator() {
@@ -141,14 +123,14 @@ export default {
       } else {
         return false;
       }
-    },
+    }
   },
   methods: {
     showDetail() {
-      this.$emit("show-detail", this.result.id);
+      this.$emit('show-detail', this.result.id);
     },
     showError(error) {
-      this.$emit("show-error", error);
+      this.$emit('show-error', error);
     },
     async toggleCart() {
       UserInfo.commit((state) => {
@@ -158,16 +140,16 @@ export default {
       if (this.isInCart !== false) {
         prevFavoriteRecipe.splice(this.isInCart, 1);
         if (prevFavoriteRecipe === []) {
-          prevFavoriteRecipe = "";
+          prevFavoriteRecipe = '';
         }
         const payload = {
           userId: this.getUser.userId,
           token: this.getUser.token,
-          data: { favoriteRecipe: prevFavoriteRecipe },
+          data: { favoriteRecipe: prevFavoriteRecipe }
         };
         const fetchResult = await UserInfo.api().toggleCart(payload);
         if (fetchResult.response.data.error) {
-          this.showError("레시피를 장바구니에서 삭제하는 데 실패하였습니다!");
+          this.showError('레시피를 장바구니에서 삭제하는 데 실패하였습니다!');
         }
       } else {
         if (this.userFavoriteRecipe.length === 0) {
@@ -177,48 +159,42 @@ export default {
         const payload = {
           userId: this.getUser.userId,
           token: this.getUser.token,
-          data: { favoriteRecipe: prevFavoriteRecipe },
+          data: { favoriteRecipe: prevFavoriteRecipe }
         };
         const fetchResult = await UserInfo.api().toggleCart(payload);
         if (fetchResult.response.data.error) {
-          this.showError("레시피를 장바구니에 추가하는 데 실패하였습니다!");
+          this.showError('레시피를 장바구니에 추가하는 데 실패하였습니다!');
         }
       }
-      const fetchResult = await UserInfo.api().fetch(
-        this.getUser.userId,
-        this.getUser.token
-      );
+      const fetchResult = await UserInfo.api().fetch(this.getUser.userId, this.getUser.token);
       if (fetchResult.response.data.error) {
-        this.showError("사용자 정보를 불러올 수 없습니다!");
+        this.showError('사용자 정보를 불러올 수 없습니다!');
       }
       UserInfo.commit((state) => {
         state.fetching = false;
       });
     },
     updateRecipe() {
-      this.$emit("update-recipe", this.result.name);
+      this.$emit('update-recipe', this.result.name);
     },
     async deleteRecipe() {
       Recipe.commit((state) => {
         state.fetching = true;
       });
-      const fetchResult = await Recipe.api().deleteRecipe(
-        this.result.id,
-        this.getUser.token
-      );
+      const fetchResult = await Recipe.api().deleteRecipe(this.result.id, this.getUser.token);
       if (fetchResult.response.status !== 200) {
-        this.showError("레시피를 삭제하는 데 실패하였습니다!");
+        this.showError('레시피를 삭제하는 데 실패하였습니다!');
       }
       Recipe.commit((state) => {
         state.fetching = false;
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 .result-element-container {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 15%);
   width: 16vw;
@@ -293,7 +269,7 @@ export default {
 
 .result-detail-title-name {
   font-size: 1.2vw;
-  font-family: "Jua", sans-serif;
+  font-family: 'Jua', sans-serif;
   text-align: center;
 }
 

@@ -1,10 +1,10 @@
-import { Model } from "@vuex-orm/core";
+import { Model } from '@vuex-orm/core';
 
 export default class UserInfo extends Model {
-  static entity = "userinfo";
+  static entity = 'userinfo';
   static state() {
     return {
-      fetching: false,
+      fetching: false
     };
   }
   static fields() {
@@ -13,65 +13,61 @@ export default class UserInfo extends Model {
       nickname: this.attr(null),
       token: this.attr(null),
       favoriteRecipe: this.attr([]),
-      type: this.attr(null),
+      type: this.attr(null)
     };
   }
   static apiConfig = {
     actions: {
       async auth(payload) {
-        const axios = require("axios");
+        const axios = require('axios');
         const mode = payload.mode;
         let authUrl =
-          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAZFXCPHgDjeIt8ccir1ez8X4_RQBxicRM";
-        if (mode === "signup") {
+          'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAZFXCPHgDjeIt8ccir1ez8X4_RQBxicRM';
+        if (mode === 'signup') {
           authUrl =
-            "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAZFXCPHgDjeIt8ccir1ez8X4_RQBxicRM";
+            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAZFXCPHgDjeIt8ccir1ez8X4_RQBxicRM';
         }
         await axios
           .post(authUrl, {
             email: payload.email,
             password: payload.password,
-            returnSecureToken: true,
+            returnSecureToken: true
           })
           .then(async (response) => {
-            if (mode === "signup") {
+            if (mode === 'signup') {
               const fetchResult = await this.put(
                 `users/${response.data.localId}.json?auth=${response.data.idToken}`,
                 {
                   nickname: payload.nickname,
-                  favoriteRecipe: "",
-                  type: payload.type,
+                  favoriteRecipe: '',
+                  type: payload.type
                 },
                 {
-                  persistBy: "create",
+                  persistBy: 'create'
                 }
               );
               if (fetchResult.response.data.error) {
                 throw new Error(
-                  "서버와의 통신이 원활하지 않습니다! 지속되는 경우, 관리자에게 문의하세요!"
+                  '서버와의 통신이 원활하지 않습니다! 지속되는 경우, 관리자에게 문의하세요!'
                 );
               }
             }
-            const fetchResult = await this.fetch(
-              response.data.localId,
-              response.data.idToken
-            );
+            const fetchResult = await this.fetch(response.data.localId, response.data.idToken);
             if (fetchResult.response.data.error) {
-              throw new Error("유저 정보를 불러올 수 없습니다!");
+              throw new Error('유저 정보를 불러올 수 없습니다!');
             }
           })
           .catch((error) => {
             throw new Error(
-              error ||
-                "인증에 실패하였습니다! 이메일과 비밀번호를 다시 확인해주세요!"
+              error || '인증에 실패하였습니다! 이메일과 비밀번호를 다시 확인해주세요!'
             );
           });
       },
       fetch(userId, token) {
         return this.get(`users/${userId}.json?auth=${token}`, {
-          persistBy: "create",
+          persistBy: 'create',
           dataTransformer: (response) => {
-            let filteredFavoriteRecipe = "";
+            let filteredFavoriteRecipe = '';
             if (response.data.favoriteRecipe !== null) {
               filteredFavoriteRecipe = response.data.favoriteRecipe;
             }
@@ -80,18 +76,15 @@ export default class UserInfo extends Model {
               nickname: response.data.nickname,
               token: token,
               favoriteRecipe: filteredFavoriteRecipe,
-              type: response.data.type,
+              type: response.data.type
             };
             return result;
-          },
+          }
         });
       },
       toggleCart(payload) {
-        return this.patch(
-          `users/${payload.userId}.json?auth=${payload.token}`,
-          payload.data
-        );
-      },
-    },
+        return this.patch(`users/${payload.userId}.json?auth=${payload.token}`, payload.data);
+      }
+    }
   };
 }

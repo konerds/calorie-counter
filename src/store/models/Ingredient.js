@@ -1,27 +1,27 @@
-import { Model } from "@vuex-orm/core";
+import { Model } from '@vuex-orm/core';
 
 export default class Ingredient extends Model {
-  static entity = "ingredients";
-  static primaryKey = "id";
+  static entity = 'ingredients';
+  static primaryKey = 'id';
   static state() {
     return {
-      fetching: false,
+      fetching: false
     };
   }
   static fields() {
     return {
       id: this.attr(null),
-      name: this.attr(""),
-      carbByUnit: this.attr(""),
-      proteinByUnit: this.attr(""),
-      fatByUnit: this.attr(""),
-      sodiumByUnit: this.attr(""),
+      name: this.attr(''),
+      carbByUnit: this.attr(''),
+      proteinByUnit: this.attr(''),
+      fatByUnit: this.attr(''),
+      sodiumByUnit: this.attr('')
     };
   }
   static apiConfig = {
     actions: {
       fetch() {
-        return this.get("ingredients.json", {
+        return this.get('ingredients.json', {
           dataTransformer: (response) => {
             const arrayIngredients = [];
             for (let i = 0; i < response.data.length; i++) {
@@ -32,31 +32,25 @@ export default class Ingredient extends Model {
                   carbByUnit: response.data[i].carbByUnit,
                   proteinByUnit: response.data[i].proteinByUnit,
                   fatByUnit: response.data[i].fatByUnit,
-                  sodiumByUnit: response.data[i].sodiumByUnit,
+                  sodiumByUnit: response.data[i].sodiumByUnit
                 });
               }
             }
             return arrayIngredients;
-          },
+          }
         });
       },
       createIngredient(payload) {
-        return this.put(
-          `ingredients/${payload.index}.json?auth=` + payload.token,
-          payload.data
-        );
+        return this.put(`ingredients/${payload.index}.json?auth=` + payload.token, payload.data);
       },
       updateIngredient(payload) {
-        return this.patch(
-          `ingredients/${payload.index}.json?auth=` + payload.token,
-          payload.data
-        );
+        return this.patch(`ingredients/${payload.index}.json?auth=` + payload.token, payload.data);
       },
       deleteIngredient(index, token) {
         return this.delete(`ingredients/${index}.json?auth=` + token, {
-          delete: index,
+          delete: index
         });
-      },
-    },
+      }
+    }
   };
 }

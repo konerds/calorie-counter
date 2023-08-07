@@ -1,8 +1,35 @@
-# 2021 마포구청 뉴딜일자리 사업단
-# 협업, 실습 경험용 개발팀 프로젝트
+# my-fridge-planner
 
-Vue.js 프레임워크를 활용하여 CRUD 기능을 구현해보는 것을 목표로 잡았습니다
+This template should help get you started developing with Vue 3 in Vite.
 
-초기 기획에서 데이터의 양이 이렇게 방대할 지 몰라서 No-SQL 기반의 구글 파이어베이스 DB를 활용하였습니다
+## Recommended IDE Setup
 
-테스트 페이지 URL : https://vue-http-demo-2a476.web.app/
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
