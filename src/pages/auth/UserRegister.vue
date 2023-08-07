@@ -191,13 +191,20 @@ export default {
 }
 
 .register-form {
-  width: 60%;
+  width: 320px;
+  max-width: 90%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 0;
   padding-bottom: 0;
+}
+
+@media (min-width: 640px) {
+  .register-form {
+    width: 550px;
+  }
 }
 
 .register-form:nth-child(1) {

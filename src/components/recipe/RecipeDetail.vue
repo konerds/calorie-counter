@@ -1,7 +1,7 @@
 <template>
   <div class="detail-container">
     <a-card :style="{ padding: '10px', width: '100%' }">
-      <a-card :style="{ margin: '15px', width: '100%' }" :bordered="false">
+      <a-card :style="{ width: '100%' }" :bordered="false">
         <template #title>
           <a-row class="detail-header-container">
             <a-col class="detail-header-item">
@@ -155,6 +155,7 @@ export default {
 
 .detail-header-container {
   display: flex;
+  flex-wrap: wrap;
   height: 100%;
   width: 100%;
   align-items: center;
@@ -167,15 +168,21 @@ export default {
   font-family: 'Jua', sans-serif;
 }
 
+.detail-header-item:nth-child(1) {
+  margin-right: 20px;
+}
+
 .detail-header-item:nth-child(2) {
   font-size: large;
 }
 
 .detail-header-item:nth-child(3) {
   font-size: small;
+  margin-left: 20px;
 }
 
 .info-card-container {
+  width: 100%;
   margin-left: 10px;
   margin-right: 10px;
 }
@@ -185,13 +192,23 @@ export default {
 }
 
 .info-card {
-  width: fit-content;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;
   margin-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+@media (min-width: 640px) {
+  .info-card-container {
+    width: auto;
+  }
+
+  .info-card {
+    width: fit-content;
+  }
 }
 
 .text-title {

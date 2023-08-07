@@ -37,7 +37,7 @@ import Ingredient from './store/models/Ingredient.js';
 import TheHeader from './components/layout/TheHeader.vue';
 import PageError from './components/ui/PageError.vue';
 export default {
-  name: 'My Fridge Planner',
+  name: 'My-Fridge-Planner',
   components: { TheHeader, PageError },
   data() {
     return {
@@ -141,14 +141,14 @@ export default {
 }
 
 .loading-modal-title {
+  font-size: larger;
   font-family: 'Jua', sans-serif;
-  font-size: 1.1vw;
 }
 
 .loading-modal-spin {
   width: 100%;
   font-family: 'Playfair Display SC', serif;
-  font-size: 0.9vw;
+  font-size: medium;
   text-align: center;
 }
 

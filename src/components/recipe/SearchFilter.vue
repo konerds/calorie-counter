@@ -1,10 +1,6 @@
 <template>
   <div class="search-filter-container">
-    <a-card
-      class="search-filter-card"
-      :bordered="false"
-      :bodyStyle="{ width: '100%', marginLeft: '10px', marginRight: '10px' }"
-    >
+    <a-card class="search-filter-card" :bordered="false" :bodyStyle="{ width: '100%' }">
       <div class="line-break search-filter">
         <a-auto-complete
           :style="{ width: 'inherit' }"
@@ -310,7 +306,7 @@ export default {
     position: fixed;
     display: flex;
     align-items: center;
-  } 
+  }
 }
 
 .search-filter {
