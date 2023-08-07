@@ -1,15 +1,13 @@
 <template>
   <a-row class="header-container">
     <a-col class="header-item">
-      <router-link to="/search"
-        ><img src="/assets/logo.jpg" :width="140" />
-      </router-link>
+      <router-link to="/search"><img class="header-icon" src="/assets/logo.jpg" /> </router-link>
     </a-col>
     <a-col class="header-item"></a-col>
     <a-col class="header-item">
       <div id="auth-btn">
         <router-link v-if="!isLoggedIn" to="/auth"
-          ><a-avatar src="/assets/account.svg" :size="75" />
+          ><a-avatar class="header-avatar" src="/assets/account.svg" :size="60" />
         </router-link>
         <div v-else>
           <a-dropdown-button>
@@ -107,6 +105,22 @@ export default {
 
 .header-item:nth-child(3) {
   margin-right: 30px;
+}
+
+.header-icon {
+  width: 100px;
+}
+
+@media (min-width: 500px) {
+  .header-icon {
+    width: 140px;
+  }
+  .header-avatar {
+    width: 75px !important;
+    height: 75px !important;
+    line-height: 75px !important;
+    font-size: 18px !important;
+  }
 }
 
 .menu-text {
