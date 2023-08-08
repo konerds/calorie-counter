@@ -31,12 +31,12 @@
       </div>
       <div class="line-break search-filter">
         <a-auto-complete
-          :style="{ width: 'inherit' }"
           v-model:value="existIngredientValue"
+          :style="{ width: 'inherit' }"
           :dropdown-match-select-width="false"
           option-label-prop="title"
           :filterOption="true"
-          @select="selectExistIngredient"
+          @select="onSelectExistIngredient"
         >
           <template #options>
             <a-select-option v-for="ingredient in ingredients" :key="ingredient.name">
@@ -47,15 +47,18 @@
               </template>
             </a-select-option>
           </template>
-          <a-input
-            :style="{ fontSize: '' }"
+          <a-input-search
+            enter-button="추가"
             size="large"
             placeholder="냉장고에 있는 재료를 적어 보세요"
             ><template #prefix> <PlusOutlined /> </template
-          ></a-input>
+          ></a-input-search>
         </a-auto-complete>
       </div>
-      <div v-if="selectedExistIngredients.length !== 0" class="line-break search-filter">
+      <div
+        v-if="selectedExistIngredients.length !== 0"
+        class="line-break search-filter filter-element-ingredients"
+      >
         <div
           class="search-filter-item"
           v-for="selectedExistIngredient in selectedExistIngredients"
@@ -68,14 +71,14 @@
           ></ingredient-filter>
         </div>
       </div>
-      <div class="line-break search-filter">
+      <div class="line-break search-filter filter-not-exist-ingredients">
         <a-auto-complete
-          :style="{ width: 'inherit' }"
           v-model:value="notExistIngredientValue"
+          :style="{ width: 'inherit' }"
           :dropdown-match-select-width="false"
           option-label-prop="title"
           :filterOption="true"
-          @select="selectNotExistIngredient"
+          @select="onSelectNotExistIngredient"
         >
           <template #options>
             <a-select-option v-for="ingredient in ingredients" :key="ingredient.name">
@@ -86,12 +89,15 @@
               </template>
             </a-select-option>
           </template>
-          <a-input size="large" placeholder="없는 재료도 적어 보세요">
+          <a-input-search enter-button="추가" size="large" placeholder="없는 재료도 적어 보세요">
             <template #prefix> <MinusOutlined /> </template>
-          </a-input>
+          </a-input-search>
         </a-auto-complete>
       </div>
-      <div v-if="selectedNotExistIngredients.length !== 0" class="line-break search-filter">
+      <div
+        v-if="selectedNotExistIngredients.length !== 0"
+        class="line-break search-filter filter-element-ingredients"
+      >
         <div
           class="search-filter-item"
           v-for="selectedNotExistIngredient in selectedNotExistIngredients"
@@ -252,11 +258,12 @@ export default {
         .get();
       this.$emit('show-result', searchedResult, this.searchText);
     },
-    selectExistIngredient(name) {
+    onSelectExistIngredient(name) {
       this.selectedExistIngredients.push(Ingredient.query().where('name', name).get());
-      this.existIngredientValue = '';
+      console.log(this.existIngredientValue);
+      // this.existIngredientValue = '';
     },
-    selectNotExistIngredient(name) {
+    onSelectNotExistIngredient(name) {
       this.selectedNotExistIngredients.push(Ingredient.query().where('name', name).get());
       this.notExistIngredientValue = '';
     },
@@ -318,12 +325,21 @@ export default {
   align-items: center;
 }
 
+.filter-element-ingredients {
+  padding-top: 0px;
+  padding-bottom: 20px;
+}
+
 .search-filter-item {
-  margin: 8px;
+  margin: 0px 8px 0px 8px;
+}
+
+.filter-not-exist-ingredients {
+  padding-top: 0px;
 }
 
 .search-filter:nth-last-child(1) {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .line-break {
