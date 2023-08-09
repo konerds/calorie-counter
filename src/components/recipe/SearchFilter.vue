@@ -21,6 +21,7 @@
           </template>
           <a-input
             :value="enteredInputKeywordValue"
+            @change="enteredInputKeywordValue = $event.target.value"
             :width="100"
             size="large"
             placeholder="원하는 레시피를 찾아보세요!"
