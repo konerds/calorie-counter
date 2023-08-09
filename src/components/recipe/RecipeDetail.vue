@@ -163,9 +163,14 @@ export default {
 }
 
 .recipe-name {
-  font-size: 3.5vw;
-  line-height: 3.5vw;
+  font-size: x-large;
   font-family: 'Jua', sans-serif;
+}
+
+@media (min-width: 1920px) {
+  .recipe-name {
+    font-size: xx-large;
+  }
 }
 
 .detail-header-item:nth-child(1) {

@@ -4,10 +4,10 @@
       <div class="line-break search-filter">
         <a-auto-complete
           :style="{ width: 'inherit' }"
-          v-model:value="keywordValue"
+          v-model:value="enteredAutoCompleteKeywordValue"
           :dropdown-match-select-width="false"
           option-label-prop="title"
-          @select="onSelect"
+          @select="onSelectAutoCompleteKeywordValue"
           :filterOption="true"
         >
           <template #options>
@@ -20,7 +20,7 @@
             </a-select-option>
           </template>
           <a-input
-            v-model:value.trim="searchText"
+            :value="enteredInputKeywordValue"
             :width="100"
             size="large"
             placeholder="원하는 레시피를 찾아보세요!"
@@ -31,23 +31,18 @@
       </div>
       <div class="line-break search-filter">
         <a-auto-complete
-          v-model:value="existIngredientValue"
+          :getPopupContainer="getPopupContainer"
+          v-model:value="enteredAutoCompleteValueIncludedIngredient"
           :style="{ width: 'inherit' }"
           :dropdown-match-select-width="false"
-          option-label-prop="title"
-          :filterOption="true"
-          @select="onSelectExistIngredient"
+          :filterOption="false"
+          :options="optionsIncludedIngredients"
+          @focus="onFocusFilterIncludedIngredients"
+          @select="onSelectIncludedIngredient"
         >
-          <template #options>
-            <a-select-option v-for="ingredient in ingredients" :key="ingredient.name">
-              <template #label>
-                <span style="margin-left: 0.5rem">
-                  {{ ingredient.name }}
-                </span>
-              </template>
-            </a-select-option>
-          </template>
           <a-input-search
+            :value="enteredInputValueIncludedIngredient"
+            @change="enteredInputValueIncludedIngredient = $event.target.value"
             enter-button="추가"
             size="large"
             placeholder="냉장고에 있는 재료를 적어 보세요"
@@ -56,56 +51,55 @@
         </a-auto-complete>
       </div>
       <div
-        v-if="selectedExistIngredients.length !== 0"
+        v-if="selectedIncludedIngredients.length !== 0"
         class="line-break search-filter filter-element-ingredients"
       >
         <div
           class="search-filter-item"
-          v-for="selectedExistIngredient in selectedExistIngredients"
-          :key="selectedExistIngredient"
+          v-for="selectedIncludedIngredient in selectedIncludedIngredients"
+          :key="selectedIncludedIngredient"
         >
           <ingredient-filter
-            type="exist"
-            :ingredient="selectedExistIngredient"
+            type="included"
+            :ingredient="selectedIncludedIngredient"
             @unselect="unselectIngredient"
           ></ingredient-filter>
         </div>
       </div>
-      <div class="line-break search-filter filter-not-exist-ingredients">
+      <div class="line-break search-filter filter-not-included-ingredients">
         <a-auto-complete
-          v-model:value="notExistIngredientValue"
+          :getPopupContainer="getPopupContainer"
+          v-model:value="enteredAutoCompleteValueNotIncludedIngredient"
           :style="{ width: 'inherit' }"
           :dropdown-match-select-width="false"
-          option-label-prop="title"
-          :filterOption="true"
-          @select="onSelectNotExistIngredient"
+          :filterOption="false"
+          :options="optionsNotIncludedIngredients"
+          @focus="onFocusFilterNotIncludedIngredients"
+          @select="onSelectNotIncludedIngredient"
         >
-          <template #options>
-            <a-select-option v-for="ingredient in ingredients" :key="ingredient.name">
-              <template #label>
-                <span style="margin-left: 0.5rem">
-                  {{ ingredient.name }}
-                </span>
-              </template>
-            </a-select-option>
-          </template>
-          <a-input-search enter-button="추가" size="large" placeholder="없는 재료도 적어 보세요">
+          <a-input-search
+            :value="enteredInputValueNotIncludedIngredient"
+            @change="enteredInputValueNotIncludedIngredient = $event.target.value"
+            enter-button="추가"
+            size="large"
+            placeholder="냉장고에 없는 재료도 적어 보세요"
+          >
             <template #prefix> <MinusOutlined /> </template>
           </a-input-search>
         </a-auto-complete>
       </div>
       <div
-        v-if="selectedNotExistIngredients.length !== 0"
+        v-if="selectedNotIncludedIngredients.length !== 0"
         class="line-break search-filter filter-element-ingredients"
       >
         <div
           class="search-filter-item"
-          v-for="selectedNotExistIngredient in selectedNotExistIngredients"
-          :key="selectedNotExistIngredient"
+          v-for="selectedNotIncludedIngredient in selectedNotIncludedIngredients"
+          :key="selectedNotIncludedIngredient"
         >
           <ingredient-filter
             type="none"
-            :ingredient="selectedNotExistIngredient"
+            :ingredient="selectedNotIncludedIngredient"
             @unselect="unselectIngredient"
           ></ingredient-filter>
         </div>
@@ -114,7 +108,7 @@
         <a-input
           size="large"
           placeholder="레시피의 최대 칼로리를 적어 보세요"
-          v-model:value="maxCalorie"
+          v-model:value="enteredInputMaxCalorie"
         ></a-input>
       </div>
       <div class="line-break search-filter">
@@ -140,49 +134,34 @@ export default {
   },
   data() {
     return {
-      keywordValue: ref(''),
-      existIngredientValue: ref(''),
-      notExistIngredientValue: ref(''),
-      searchText: ref(''),
-      selectedExistIngredients: ref([]),
-      selectedNotExistIngredients: ref([]),
-      maxCalorie: ref('')
+      enteredAutoCompleteKeywordValue: ref(''),
+      enteredInputKeywordValue: ref(''),
+      optionsIncludedIngredients: ref([]),
+      optionsNotIncludedIngredients: ref([]),
+      limitsFilter: 10,
+      enteredAutoCompleteValueIncludedIngredient: ref(''),
+      enteredAutoCompleteValueNotIncludedIngredient: ref(''),
+      enteredInputValueIncludedIngredient: ref(''),
+      enteredInputValueNotIncludedIngredient: ref(''),
+      selectedIncludedIngredients: ref([]),
+      selectedNotIncludedIngredients: ref([]),
+      enteredInputMaxCalorie: ref('')
     };
   },
   computed: {
-    ingredients() {
-      return Ingredient.query()
-        .where((ingredient) => {
-          if (this.selectedExistIngredients.length > 0) {
-            if (
-              this.selectedExistIngredients.filter((existIngredient) => {
-                if (existIngredient[0].name === ingredient.name) {
-                  return true;
-                }
-                return false;
-              }).length > 0
-            ) {
-              return false;
-            }
-            if (this.selectedNotExistIngredients.length > 0) {
-              if (
-                this.selectedNotExistIngredients.filter((notExistIngredient) => {
-                  if (notExistIngredient[0].name === ingredient.name) {
-                    return true;
-                  }
-                  return false;
-                }).length > 0
-              ) {
-                return false;
-              }
-              return true;
-            }
-            return true;
-          }
-          return true;
-        })
-        .orderBy('name', 'asc')
-        .get();
+    watcherDependenciesOptionsIngredients() {
+      const {
+        enteredInputValueIncludedIngredient,
+        enteredInputValueNotIncludedIngredient,
+        selectedIncludedIngredients,
+        selectedNotIncludedIngredients
+      } = this;
+      return {
+        enteredInputValueIncludedIngredient,
+        enteredInputValueNotIncludedIngredient,
+        selectedIncludedIngredients,
+        selectedNotIncludedIngredients
+      };
     },
     recipes() {
       return Recipe.query().orderBy('name', 'asc').get();
@@ -197,95 +176,175 @@ export default {
         keywords.push(ingredients[indexIngredient].name);
       }
       const filteredKeywords = keywords.filter((keyword) => {
-        if (this.searchText === '') {
+        if (this.enteredInputKeywordValue === '') {
           return false;
         }
         return true;
       });
-
       return [...new Set(filteredKeywords)];
     }
   },
   watch: {
-    maxCalorie(val, preVal) {
+    watcherDependenciesOptionsIngredients: {
+      handler: function (val) {
+        this.fetchOptionsFilterIngredients(true);
+        this.fetchOptionsFilterIngredients(false);
+      },
+      deep: true
+    },
+    enteredInputMaxCalorie(val, preVal) {
       const reg = /^-?\d*(\.\d*)?$/;
       if ((!isNaN(+val) && reg.test(val)) || val === '' || val === '-') {
-        this.maxCalorie = val;
+        this.enteredInputMaxCalorie = val;
       } else {
-        this.maxCalorie = preVal;
+        this.enteredInputMaxCalorie = preVal;
       }
     }
   },
   methods: {
+    onFocusFilterIncludedIngredients() {
+      this.fetchOptionsFilterIngredients(true);
+    },
+    onFocusFilterNotIncludedIngredients() {
+      this.fetchOptionsFilterIngredients(false);
+    },
+    async fetchOptionsFilterIngredients(isOptionIncludedIngredient) {
+      const options = await Ingredient.query()
+        .where((ingredient) => {
+          const searchKeywordIngredient = isOptionIncludedIngredient
+            ? this.enteredInputValueIncludedIngredient
+            : this.enteredInputValueNotIncludedIngredient;
+          if (
+            searchKeywordIngredient !== undefined &&
+            searchKeywordIngredient !== null &&
+            ingredient.name.indexOf(searchKeywordIngredient) >= 0
+          ) {
+            if (this.selectedIncludedIngredients.length > 0) {
+              if (
+                this.selectedIncludedIngredients.filter((includedIngredient) => {
+                  if (includedIngredient[0].name === ingredient.name) {
+                    return true;
+                  }
+                  return false;
+                }).length > 0
+              ) {
+                return false;
+              }
+            }
+            if (this.selectedNotIncludedIngredients.length > 0) {
+              if (
+                this.selectedNotIncludedIngredients.filter((notIncludedIngredient) => {
+                  if (notIncludedIngredient[0].name === ingredient.name) {
+                    return true;
+                  }
+                  return false;
+                }).length > 0
+              ) {
+                return false;
+              }
+            }
+            return true;
+          }
+          return false;
+        })
+        .orderBy('name', 'asc')
+        .get();
+      if (isOptionIncludedIngredient) {
+        this.optionsIncludedIngredients = options.slice(0, this.limitsFilter).map((e) => {
+          return {
+            value: e.name
+          };
+        });
+      } else {
+        this.optionsNotIncludedIngredients = options.slice(0, this.limitsFilter).map((e) => {
+          return {
+            value: e.name
+          };
+        });
+      }
+    },
+    getPopupContainer(triggerNode) {
+      return triggerNode.parentElement;
+    },
     async searchRecipe() {
       const searchedResult = await Recipe.query()
         .where((recipe) => {
-          if (+recipe.calorie > +this.maxCalorie && this.maxCalorie.length !== 0) {
+          if (
+            +recipe.calorie > +this.enteredInputMaxCalorie &&
+            this.enteredInputMaxCalorie.length !== 0
+          ) {
             return false;
           }
-          if (recipe.name === this.searchText || recipe.name.includes(this.searchText)) {
-            let isExistFiltered = true;
-            if (this.selectedExistIngredients.length > 0) {
-              isExistFiltered =
+          if (
+            recipe.name === this.enteredInputKeywordValue ||
+            recipe.name.includes(this.enteredInputKeywordValue)
+          ) {
+            let isIncludedIngredientsFilter = true;
+            if (this.selectedIncludedIngredients.length > 0) {
+              isIncludedIngredientsFilter =
                 recipe.ingredients.filter((ingredient) => {
-                  for (let key in this.selectedExistIngredients) {
-                    if (this.selectedExistIngredients[key][0].name === ingredient.name) {
+                  for (let key in this.selectedIncludedIngredients) {
+                    if (this.selectedIncludedIngredients[key][0].name === ingredient.name) {
                       return true;
                     }
                   }
                   return false;
                 }).length > 0;
             }
-            let isNotExistFiltered = true;
-            if (this.selectedNotExistIngredients.length > 0) {
-              isNotExistFiltered =
+            let isNotIncludedIngredientsFilter = true;
+            if (this.selectedNotIncludedIngredients.length > 0) {
+              isNotIncludedIngredientsFilter =
                 recipe.ingredients.filter((ingredient) => {
-                  for (let key in this.selectedNotExistIngredients) {
-                    if (this.selectedNotExistIngredients[key][0].name === ingredient.name) {
+                  for (let key in this.selectedNotIncludedIngredients) {
+                    if (this.selectedNotIncludedIngredients[key][0].name === ingredient.name) {
                       return false;
                     }
                   }
                   return true;
                 }).length === recipe.ingredients.length;
             }
-            if (isExistFiltered && isNotExistFiltered) {
-              return true;
-            }
-            return false;
+            return isIncludedIngredientsFilter && isNotIncludedIngredientsFilter;
           }
           return false;
         })
         .get();
-      this.$emit('show-result', searchedResult, this.searchText);
+      this.$emit('show-result', searchedResult, this.enteredInputKeywordValue);
+      this.enteredAutoCompleteValueIncludedIngredient = '';
+      this.enteredInputValueIncludedIngredient = '';
+      this.enteredAutoCompleteValueNotIncludedIngredient = '';
+      this.enteredInputValueNotIncludedIngredient = '';
     },
-    onSelectExistIngredient(name) {
-      this.selectedExistIngredients.push(Ingredient.query().where('name', name).get());
-      console.log(this.existIngredientValue);
-      // this.existIngredientValue = '';
+    onSelectIncludedIngredient(name) {
+      this.selectedIncludedIngredients.push(Ingredient.query().where('name', name).get());
+      this.enteredAutoCompleteValueIncludedIngredient = '';
+      this.enteredInputValueIncludedIngredient = '';
     },
-    onSelectNotExistIngredient(name) {
-      this.selectedNotExistIngredients.push(Ingredient.query().where('name', name).get());
-      this.notExistIngredientValue = '';
+    onSelectNotIncludedIngredient(name) {
+      this.selectedNotIncludedIngredients.push(Ingredient.query().where('name', name).get());
+      this.enteredAutoCompleteValueNotIncludedIngredient = '';
+      this.enteredInputValueNotIncludedIngredient = '';
     },
     unselectIngredient(name, type) {
-      if (type === 'exist') {
-        this.selectedExistIngredients = this.selectedExistIngredients.filter((ingredient) => {
+      if (type === 'included') {
+        this.selectedIncludedIngredients = this.selectedIncludedIngredients.filter((ingredient) => {
           if (ingredient[0].name === name) {
             return false;
           }
           return true;
         });
       } else {
-        this.selectedNotExistIngredients = this.selectedNotExistIngredients.filter((ingredient) => {
-          if (ingredient[0].name === name) {
-            return false;
+        this.selectedNotIncludedIngredients = this.selectedNotIncludedIngredients.filter(
+          (ingredient) => {
+            if (ingredient[0].name === name) {
+              return false;
+            }
+            return true;
           }
-          return true;
-        });
+        );
       }
     },
-    onSelect(searchText) {
-      this.searchText = searchText;
+    onSelectAutoCompleteKeywordValue(_enteredInputKeywordValue) {
+      this.enteredInputKeywordValue = _enteredInputKeywordValue;
     }
   }
 };
@@ -334,7 +393,7 @@ export default {
   margin: 0px 8px 0px 8px;
 }
 
-.filter-not-exist-ingredients {
+.filter-not-included-ingredients {
   padding-top: 0px;
 }
 

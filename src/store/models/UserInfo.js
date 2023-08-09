@@ -21,11 +21,13 @@ export default class UserInfo extends Model {
       async auth(payload) {
         const axios = require('axios');
         const mode = payload.mode;
-        let authUrl =
-          'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAZFXCPHgDjeIt8ccir1ez8X4_RQBxicRM';
+        let authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${
+          import.meta.env.VITE_FIREBASE_API_KEY
+        }`;
         if (mode === 'signup') {
-          authUrl =
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAZFXCPHgDjeIt8ccir1ez8X4_RQBxicRM';
+          authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${
+            import.meta.env.VITE_FIREBASE_API_KEY
+          }`;
         }
         await axios
           .post(authUrl, {

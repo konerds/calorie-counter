@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     filterIcon() {
-      if (this.type === 'exist') {
+      if (this.type === 'included') {
         return '/assets/check-yes.svg';
       } else {
         return '/assets/check-no.svg';

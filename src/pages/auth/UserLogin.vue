@@ -187,6 +187,12 @@ export default {
   }
 }
 
+@media (min-width: 1500px) {
+  .login-form {
+    width: 60%;
+  }
+}
+
 .login-footer {
   width: 100%;
   margin-top: 0;

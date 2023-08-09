@@ -207,6 +207,12 @@ export default {
   }
 }
 
+@media (min-width: 1500px) {
+  .register-form {
+    width: 60%;
+  }
+}
+
 .register-form:nth-child(1) {
   margin-top: 4vh;
 }
