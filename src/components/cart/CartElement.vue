@@ -34,7 +34,7 @@
             <a-input
               type="text"
               placeholder="(g/mL)"
-              style="{text-align:right;}"
+              :style="{ textAlign: 'right' }"
               :defaultValue="item.unit"
               disabled
             >
