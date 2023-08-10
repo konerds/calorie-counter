@@ -332,36 +332,34 @@ export default {
             this.showError('이미지 업로드에 실패하였습니다' || error);
           },
           async () => {
-            await firebase
+            const url = await firebase
               .storage()
               .ref(`recipes/${+Recipe.query().last().id + 1}`)
               .child(`${this.getUser.userId}`)
-              .getDownloadURL()
-              .then(async (url) => {
-                const payload = {
-                  index: +Recipe.query().last().id + 1,
-                  token: this.getUser.token,
-                  data: {
-                    id: +Recipe.query().last().id + 1,
-                    creator: [UserInfo.all()[0].userId, UserInfo.all()[0].nickname],
-                    name: values.name,
-                    method: values.method,
-                    type: values.type,
-                    smallImg: url,
-                    largeImg: url,
-                    ingredients: this.recipeData.ingredients,
-                    steps: this.recipeData.steps
-                  }
-                };
-                const result = await Recipe.api().createRecipe(payload);
-                if (result.response.data.error) {
-                  this.showError('레시피를 생성하는 데 실패하였습니다!');
-                }
-                Recipe.commit((state) => {
-                  state.fetching = false;
-                });
-                this.$emit('cancel');
-              });
+              .getDownloadURL();
+            const payload = {
+              index: +Recipe.query().last().id + 1,
+              token: this.getUser.token,
+              data: {
+                id: +Recipe.query().last().id + 1,
+                creator: [UserInfo.all()[0].userId, UserInfo.all()[0].nickname],
+                name: values.name,
+                method: values.method,
+                type: values.type,
+                smallImg: url,
+                largeImg: url,
+                ingredients: this.recipeData.ingredients,
+                steps: this.recipeData.steps
+              }
+            };
+            const result = await Recipe.api().createRecipe(payload);
+            if (result.response.data.error) {
+              this.showError('레시피를 생성하는 데 실패하였습니다!');
+            }
+            Recipe.commit((state) => {
+              state.fetching = false;
+            });
+            this.$emit('cancel');
           }
         );
       }

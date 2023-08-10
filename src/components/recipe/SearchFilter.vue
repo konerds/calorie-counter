@@ -4,7 +4,7 @@
       <div class="line-break search-filter">
         <a-auto-complete
           :getPopupContainer="getPopupContainer"
-          v-model:value="enteredAutoCompleteRecipeValue"
+          v-model:value="enteredInputRecipeValue"
           :style="{ width: 'inherit' }"
           :dropdown-match-select-width="false"
           :filterOption="false"
@@ -12,12 +12,7 @@
           @focus="onFocusFilterRecipe"
           @select="onSelectAutoCompleteKeywordValue"
         >
-          <a-input
-            :value="enteredInputRecipeValue"
-            @change="enteredInputRecipeValue = $event.target.value"
-            size="large"
-            placeholder="원하는 레시피를 찾아보세요!"
-          >
+          <a-input size="large" placeholder="원하는 레시피를 찾아보세요!">
             <template #prefix> <SearchOutlined /> </template
           ></a-input>
         </a-auto-complete>
@@ -25,17 +20,15 @@
       <div class="line-break search-filter">
         <a-auto-complete
           :getPopupContainer="getPopupContainer"
-          v-model:value="enteredAutoCompleteValueIncludedIngredient"
+          v-model:value="enteredInputValueIncludedIngredient"
           :style="{ width: 'inherit' }"
           :dropdown-match-select-width="false"
           :filterOption="false"
           :options="optionsIncludedIngredients"
-          @focus="onFocusFilterIncludedIngredients"
-          @select="onSelectIncludedIngredient"
+          @focus="onFocusAutoCompleteIncludedIngredients"
+          @select="onSelectAutoCompleteIncludedIngredient"
         >
           <a-input-search
-            :value="enteredInputValueIncludedIngredient"
-            @change="enteredInputValueIncludedIngredient = $event.target.value"
             enter-button="추가"
             size="large"
             placeholder="냉장고에 있는 재료를 적어 보세요"
@@ -62,17 +55,15 @@
       <div class="line-break search-filter filter-not-included-ingredients">
         <a-auto-complete
           :getPopupContainer="getPopupContainer"
-          v-model:value="enteredAutoCompleteValueNotIncludedIngredient"
+          v-model:value="enteredInputValueNotIncludedIngredient"
           :style="{ width: 'inherit' }"
           :dropdown-match-select-width="false"
           :filterOption="false"
           :options="optionsNotIncludedIngredients"
-          @focus="onFocusFilterNotIncludedIngredients"
-          @select="onSelectNotIncludedIngredient"
+          @focus="onFocusAutoCompleteNotIncludedIngredients"
+          @select="onSelectAutoCompleteNotIncludedIngredient"
         >
           <a-input-search
-            :value="enteredInputValueNotIncludedIngredient"
-            @change="enteredInputValueNotIncludedIngredient = $event.target.value"
             enter-button="추가"
             size="large"
             placeholder="냉장고에 없는 재료도 적어 보세요"
@@ -105,9 +96,12 @@
         ></a-input>
       </div>
       <div class="line-break search-filter">
-        <a-button class="search-button" @click="searchRecipe()"
-          >검색 <SearchOutlined :style="{ verticalAlign: 'middle' }"
-        /></a-button>
+        <div class="bottom-button-container">
+          <a-button class="search-button" @click="searchRecipe()"
+            >검색 <SearchOutlined :style="{ verticalAlign: 'middle' }"
+          /></a-button>
+          <a-button class="clear-button" @click="clearRecipe()">초기화</a-button>
+        </div>
       </div>
     </a-card>
   </div>
@@ -129,14 +123,11 @@ export default {
   },
   data() {
     return {
-      enteredAutoCompleteRecipeValue: ref(''),
       enteredInputRecipeValue: ref(''),
       recipesByName: ref([]),
       optionsIncludedIngredients: ref([]),
       optionsNotIncludedIngredients: ref([]),
       limitsFilter: 10,
-      enteredAutoCompleteValueIncludedIngredient: ref(''),
-      enteredAutoCompleteValueNotIncludedIngredient: ref(''),
       enteredInputValueIncludedIngredient: ref(''),
       enteredInputValueNotIncludedIngredient: ref(''),
       selectedIncludedIngredients: ref([]),
@@ -204,10 +195,10 @@ export default {
         };
       });
     },
-    onFocusFilterIncludedIngredients() {
+    onFocusAutoCompleteIncludedIngredients() {
       this.fetchOptionsFilterIngredients(true);
     },
-    onFocusFilterNotIncludedIngredients() {
+    onFocusAutoCompleteNotIncludedIngredients() {
       this.fetchOptionsFilterIngredients(false);
     },
     async fetchOptionsFilterIngredients(isOptionIncludedIngredient) {
@@ -315,19 +306,26 @@ export default {
         })
         .get();
       this.$emit('show-result', searchedResult, this.enteredInputRecipeValue);
-      this.enteredAutoCompleteValueIncludedIngredient = '';
       this.enteredInputValueIncludedIngredient = '';
-      this.enteredAutoCompleteValueNotIncludedIngredient = '';
       this.enteredInputValueNotIncludedIngredient = '';
     },
-    onSelectIncludedIngredient(name) {
-      this.selectedIncludedIngredients.push(Ingredient.query().where('name', name).get());
-      this.enteredAutoCompleteValueIncludedIngredient = '';
+    async clearRecipe() {
+      this.selectedIncludedIngredients = [];
+      this.selectedNotIncludedIngredients = [];
+      this.enteredInputRecipeValue = '';
+      this.enteredInputValueIncludedIngredient = '';
+      this.enteredInputValueNotIncludedIngredient = '';
+      this.enteredInputMaxCalorie = '';
+      await this.searchRecipe();
+    },
+    async onSelectAutoCompleteIncludedIngredient(name) {
+      const e = await Ingredient.query().where('name', name).get();
+      this.selectedIncludedIngredients.push(e);
       this.enteredInputValueIncludedIngredient = '';
     },
-    onSelectNotIncludedIngredient(name) {
-      this.selectedNotIncludedIngredients.push(Ingredient.query().where('name', name).get());
-      this.enteredAutoCompleteValueNotIncludedIngredient = '';
+    async onSelectAutoCompleteNotIncludedIngredient(name) {
+      const e = await Ingredient.query().where('name', name).get();
+      this.selectedNotIncludedIngredients.push(e);
       this.enteredInputValueNotIncludedIngredient = '';
     },
     unselectIngredient(name, type) {
@@ -412,7 +410,17 @@ export default {
 }
 
 .search-button {
+  margin-right: 16px;
+}
+
+.search-button,
+.clear-button {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 15%);
+}
+
+.bottom-button-container {
+  display: flex;
+  align-items: center;
 }
 
 a,
