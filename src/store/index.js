@@ -3,11 +3,12 @@ import { createStore } from 'vuex';
 import axios from 'axios';
 import VuexORM from '@vuex-orm/core';
 import VuexORMAxios from '@vuex-orm/plugin-axios';
-import VuexPersistence from 'vuex-persist';
+import createPersistedState from 'vuex-persistedstate';
+import SecureLS from 'secure-ls';
 
 import UserInfo from './models/UserInfo.js';
-import Ingredient from './models/Ingredient.js';
 import Recipe from './models/Recipe.js';
+import Ingredient from './models/Ingredient.js';
 
 VuexORM.use(VuexORMAxios, {
   axios,
@@ -17,16 +18,24 @@ VuexORM.use(VuexORMAxios, {
 const database = new VuexORM.Database();
 
 database.register(UserInfo);
-database.register(Ingredient);
 database.register(Recipe);
+database.register(Ingredient);
 
-const vuexLocal = new VuexPersistence({
-  storage: window.localStorage
-});
+var ls = new SecureLS({ isCompression: true });
 
 const store = createStore({
   strict: process.env.NODE_ENV !== 'production',
-  plugins: [vuexLocal.plugin, VuexORM.install(database, { namespace: 'database' })]
+  plugins: [
+    VuexORM.install(database, { namespace: 'database' }),
+    createPersistedState({
+      paths: ['database.userinfo.data'],
+      storage: {
+        getItem: (key) => ls.get(key),
+        setItem: (key, value) => ls.set(key, value),
+        removeItem: (key) => ls.remove(key)
+      }
+    })
+  ]
 });
 
 export default store;

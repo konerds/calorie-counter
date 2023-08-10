@@ -34,10 +34,10 @@
 import { ref } from 'vue';
 import Recipe from './store/models/Recipe.js';
 import Ingredient from './store/models/Ingredient.js';
+import UserInfo from './store/models/UserInfo.js';
 import TheHeader from './components/layout/TheHeader.vue';
 import PageError from './components/ui/PageError.vue';
 export default {
-  name: 'My-Fridge-Planner',
   components: { TheHeader, PageError },
   data() {
     return {
@@ -46,22 +46,42 @@ export default {
     };
   },
   created() {
+    this.fetchUserInfo();
     this.fetchRecipes();
     this.fetchIngredients();
   },
   computed: {
+    isFetchingUser() {
+      return this.$store.state.database.userinfo.fetching;
+    },
     isFetchingRecipes() {
       return this.$store.state.database.recipes.fetching;
     },
     isFetchingIngredients() {
       return this.$store.state.database.ingredients.fetching;
-    },
-    isFetchingUser() {
-      return this.$store.state.database.userinfo.fetching;
     }
   },
   methods: {
+    async fetchUserInfo() {
+      const existUserInfo = await UserInfo.all()[0];
+      if (existUserInfo) {
+        const { userId, token } = existUserInfo;
+        if (userId && token) {
+          UserInfo.commit((state) => {
+            state.fetching = true;
+          });
+          const fetchResult = await UserInfo.api().fetch(userId, token);
+          if (fetchResult.response.data.error) {
+            this.error = '사용자 정보를 불러올 수 없습니다!';
+          }
+          UserInfo.commit((state) => {
+            state.fetching = false;
+          });
+        }
+      }
+    },
     async fetchRecipes() {
+      const existRecipes = await Recipe.all();
       Recipe.commit((state) => {
         state.fetching = true;
       });

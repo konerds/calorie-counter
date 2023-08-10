@@ -69,7 +69,6 @@ export default {
     totalNeedIngredients() {
       let ingredientsFavoriteRecipe = [];
       for (let rawIndex in this.favoriteRecipe) {
-        console.log(rawIndex);
         for (let index in this.favoriteRecipe[rawIndex].ingredients) {
           if (this.favoriteRecipe[rawIndex].ingredients[index].name.length !== 0) {
             ingredientsFavoriteRecipe.push({
@@ -82,14 +81,12 @@ export default {
       const totalArray = _.chain(ingredientsFavoriteRecipe)
         .groupBy('name')
         .map((objects, name) => {
-          console.log(objects);
           return {
             name: name,
             unit: _.sumBy(objects, 'unit')
           };
         })
         .value();
-      console.log(totalArray);
       return totalArray;
     }
   }
