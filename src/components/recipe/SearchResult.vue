@@ -49,6 +49,11 @@ export default {
       pageSizeOptions: ref(['12', '24', '36', '48', '60'])
     };
   },
+  watch: {
+    searchedResult(val, preVal) {
+      this.currentPage = 1;
+    }
+  },
   computed: {
     rawResult() {
       if (this.searchedResult.length === 0 && this.keyword.length === 0) {
