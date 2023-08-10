@@ -30,7 +30,14 @@ const store = createStore({
     createPersistedState({
       paths: ['database.userinfo.data'],
       storage: {
-        getItem: (key) => ls.get(key),
+        getItem: (key) => {
+          try {
+            return ls.get(key);
+          } catch (err) {
+            localStorage.setItem('vuex', '');
+            return undefined;
+          }
+        },
         setItem: (key, value) => ls.set(key, value),
         removeItem: (key) => ls.remove(key)
       }
