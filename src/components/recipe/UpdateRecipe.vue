@@ -375,16 +375,14 @@ export default {
 .recipe-form {
   display: block;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 2vh;
+  margin: 16px auto 0px auto;
   padding-top: 0;
   padding-bottom: 0;
 }
 
 .update-upload-image {
   width: 97%;
-  height: 30vh;
+  height: 300px;
   object-fit: fill;
 }
 
@@ -400,39 +398,39 @@ export default {
 }
 
 .recipe-ingredients-item {
-  margin: 0.3vw;
+  margin: 5px;
   width: fit-content;
 }
 
 .recipe-form:nth-child(4) {
-  margin-bottom: 5vh;
+  margin-bottom: 40px;
 }
 
 .recipe-steps {
-  margin-top: 3vh;
+  margin-top: 32px;
   margin-bottom: 0;
 }
 
 .recipe-form:nth-last-child(2) {
-  margin-bottom: 3vh;
+  margin-bottom: 32px;
 }
 
 .recipe-form:nth-last-child(1) {
   text-align: center;
-  margin-bottom: 1vh;
+  margin-bottom: 10px;
 }
 
 .update-button {
   height: fit-content;
-  padding-left: 1.2vw;
-  padding-right: 1.2vw;
-  padding-top: 1.3vh;
-  padding-bottom: 1.1vh;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
   font-family: 'Jua', sans-serif;
   background-color: #3ddbf7;
   border-color: transparent;
-  font-size: 1.5vw;
-  line-height: 1.5vw;
+  font-size: xx-large;
 }
 
 .text-font {

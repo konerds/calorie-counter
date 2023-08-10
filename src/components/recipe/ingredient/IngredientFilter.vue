@@ -41,10 +41,10 @@ export default {
 
 .filter-item {
   display: flex;
-  height: 6vh;
+  height: 45px;
   align-items: center;
-  padding-left: 0.5vw;
-  padding-right: 0.5vw;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .filter-item-element {
@@ -52,7 +52,7 @@ export default {
 }
 
 .filter-item-element:nth-child(2) {
-  margin-left: 0.3vw;
-  margin-right: 0.3vw;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>

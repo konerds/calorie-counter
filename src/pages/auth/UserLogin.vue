@@ -152,9 +152,8 @@ export default {
 .login-header {
   width: 100%;
   font-size: large;
-  margin-top: 7vh;
+  margin-top: 50px;
   margin-bottom: 0;
-  line-height: 2.9vw;
   color: #32c2c8;
 }
 
@@ -196,7 +195,7 @@ export default {
 .login-footer {
   width: 100%;
   margin-top: 0;
-  margin-bottom: 7vh;
+  margin-bottom: 50px;
 }
 
 .login-footer-container {
@@ -211,12 +210,18 @@ export default {
   font-size: smaller;
   color: #f7593d;
   text-decoration: underline;
-  margin-right: 9vw;
+  margin-left: 0;
+  margin-right: 30px;
 }
 
 @media (min-width: 640px) {
   .login-footer-message {
     font-size: large;
+  }
+
+  .login-footer-message {
+    margin-left: 0;
+    margin-right: 150px;
   }
 }
 

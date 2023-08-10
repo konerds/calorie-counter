@@ -171,12 +171,19 @@ export default {
 }
 
 .ant-modal-content {
+  display: flex;
+  flex-direction: column;
   width: 90%;
+  height: 100%;
   margin: auto;
 }
 
 .ant-input[disabled] {
   background-color: white;
   color: black;
+}
+
+.ant-drawer-content {
+  overflow-x: hidden;
 }
 </style>

@@ -113,18 +113,12 @@ export default {
   grid-template-columns: repeat(1, minmax(100px, 1fr));
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 3vh;
+  margin-bottom: 32px;
 }
 
 @media (min-width: 640px) {
   .result-item-container {
     grid-template-columns: repeat(3, minmax(100px, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .result-item-container {
-    grid-template-columns: repeat(4, minmax(100px, 1fr));
   }
 }
 
@@ -139,5 +133,11 @@ export default {
   margin-left: auto;
   margin-right: auto;
   padding-top: 20px;
+}
+
+@media (max-width: 375px) {
+  .ant-pagination-item-4 {
+    display: none !important;
+  }
 }
 </style>

@@ -3,26 +3,18 @@
     <a-card class="search-filter-card" :bordered="false" :bodyStyle="{ width: '100%' }">
       <div class="line-break search-filter">
         <a-auto-complete
+          :getPopupContainer="getPopupContainer"
+          v-model:value="enteredAutoCompleteRecipeValue"
           :style="{ width: 'inherit' }"
-          v-model:value="enteredAutoCompleteKeywordValue"
           :dropdown-match-select-width="false"
-          option-label-prop="title"
+          :filterOption="false"
+          :options="recipesByName"
+          @focus="onFocusFilterRecipe"
           @select="onSelectAutoCompleteKeywordValue"
-          :filterOption="true"
         >
-          <template #options>
-            <a-select-option v-for="keyword in keywords" :key="keyword">
-              <template #label>
-                <span style="margin-left: 0.5rem">
-                  {{ keyword }}
-                </span>
-              </template>
-            </a-select-option>
-          </template>
           <a-input
-            :value="enteredInputKeywordValue"
-            @change="enteredInputKeywordValue = $event.target.value"
-            :width="100"
+            :value="enteredInputRecipeValue"
+            @change="enteredInputRecipeValue = $event.target.value"
             size="large"
             placeholder="원하는 레시피를 찾아보세요!"
           >
@@ -113,7 +105,9 @@
         ></a-input>
       </div>
       <div class="line-break search-filter">
-        <a-button class="search-button" @click="searchRecipe()">검색 <SearchOutlined /></a-button>
+        <a-button class="search-button" @click="searchRecipe()"
+          >검색 <SearchOutlined :style="{ verticalAlign: 'middle' }"
+        /></a-button>
       </div>
     </a-card>
   </div>
@@ -135,8 +129,9 @@ export default {
   },
   data() {
     return {
-      enteredAutoCompleteKeywordValue: ref(''),
-      enteredInputKeywordValue: ref(''),
+      enteredAutoCompleteRecipeValue: ref(''),
+      enteredInputRecipeValue: ref(''),
+      recipesByName: ref([]),
       optionsIncludedIngredients: ref([]),
       optionsNotIncludedIngredients: ref([]),
       limitsFilter: 10,
@@ -166,23 +161,6 @@ export default {
     },
     recipes() {
       return Recipe.query().orderBy('name', 'asc').get();
-    },
-    keywords() {
-      const keywords = [];
-      const ingredients = Ingredient.all();
-      for (let indexRecipe in this.recipes) {
-        keywords.push(this.recipes[indexRecipe].name);
-      }
-      for (let indexIngredient in ingredients) {
-        keywords.push(ingredients[indexIngredient].name);
-      }
-      const filteredKeywords = keywords.filter((keyword) => {
-        if (this.enteredInputKeywordValue === '') {
-          return false;
-        }
-        return true;
-      });
-      return [...new Set(filteredKeywords)];
     }
   },
   watch: {
@@ -192,6 +170,9 @@ export default {
         this.fetchOptionsFilterIngredients(false);
       },
       deep: true
+    },
+    enteredInputRecipeValue(val, preVal) {
+      this.fetchRecipesByName();
     },
     enteredInputMaxCalorie(val, preVal) {
       const reg = /^-?\d*(\.\d*)?$/;
@@ -203,6 +184,26 @@ export default {
     }
   },
   methods: {
+    onFocusFilterRecipe() {
+      this.fetchRecipesByName();
+    },
+    async fetchRecipesByName() {
+      const recipes = await Recipe.query()
+        .where((recipe) => {
+          return (
+            this.enteredInputRecipeValue !== undefined &&
+            this.enteredInputRecipeValue !== null &&
+            recipe.name.indexOf(this.enteredInputRecipeValue) >= 0
+          );
+        })
+        .orderBy('name', 'asc')
+        .get();
+      this.recipesByName = recipes.slice(0, this.limitsFilter).map((e) => {
+        return {
+          value: e.name
+        };
+      });
+    },
     onFocusFilterIncludedIngredients() {
       this.fetchOptionsFilterIngredients(true);
     },
@@ -270,6 +271,9 @@ export default {
     async searchRecipe() {
       const searchedResult = await Recipe.query()
         .where((recipe) => {
+          const ingredientsOfRecipe = recipe.ingredients.map((e) => {
+            return e.name;
+          });
           if (
             +recipe.calorie > +this.enteredInputMaxCalorie &&
             this.enteredInputMaxCalorie.length !== 0
@@ -277,39 +281,40 @@ export default {
             return false;
           }
           if (
-            recipe.name === this.enteredInputKeywordValue ||
-            recipe.name.includes(this.enteredInputKeywordValue)
+            recipe.name === this.enteredInputRecipeValue ||
+            recipe.name.includes(this.enteredInputRecipeValue) ||
+            ingredientsOfRecipe.includes(this.enteredInputRecipeValue)
           ) {
-            let isIncludedIngredientsFilter = true;
+            let isValidByIncludedIngredientsFilter = true;
             if (this.selectedIncludedIngredients.length > 0) {
-              isIncludedIngredientsFilter =
-                recipe.ingredients.filter((ingredient) => {
+              isValidByIncludedIngredientsFilter =
+                ingredientsOfRecipe.filter((e) => {
                   for (let key in this.selectedIncludedIngredients) {
-                    if (this.selectedIncludedIngredients[key][0].name === ingredient.name) {
+                    if (this.selectedIncludedIngredients[key][0].name === e) {
                       return true;
                     }
                   }
                   return false;
                 }).length > 0;
             }
-            let isNotIncludedIngredientsFilter = true;
+            let isValidByNotIncludedIngredientsFilter = true;
             if (this.selectedNotIncludedIngredients.length > 0) {
-              isNotIncludedIngredientsFilter =
-                recipe.ingredients.filter((ingredient) => {
+              isValidByNotIncludedIngredientsFilter =
+                ingredientsOfRecipe.filter((e) => {
                   for (let key in this.selectedNotIncludedIngredients) {
-                    if (this.selectedNotIncludedIngredients[key][0].name === ingredient.name) {
-                      return false;
+                    if (this.selectedNotIncludedIngredients[key][0].name === e) {
+                      return true;
                     }
                   }
-                  return true;
-                }).length === recipe.ingredients.length;
+                  return false;
+                }).length <= 0;
             }
-            return isIncludedIngredientsFilter && isNotIncludedIngredientsFilter;
+            return isValidByIncludedIngredientsFilter && isValidByNotIncludedIngredientsFilter;
           }
           return false;
         })
         .get();
-      this.$emit('show-result', searchedResult, this.enteredInputKeywordValue);
+      this.$emit('show-result', searchedResult, this.enteredInputRecipeValue);
       this.enteredAutoCompleteValueIncludedIngredient = '';
       this.enteredInputValueIncludedIngredient = '';
       this.enteredAutoCompleteValueNotIncludedIngredient = '';
@@ -344,8 +349,8 @@ export default {
         );
       }
     },
-    onSelectAutoCompleteKeywordValue(_enteredInputKeywordValue) {
-      this.enteredInputKeywordValue = _enteredInputKeywordValue;
+    onSelectAutoCompleteKeywordValue(_enteredInputRecipeValue) {
+      this.enteredInputRecipeValue = _enteredInputRecipeValue;
     }
   }
 };

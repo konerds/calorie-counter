@@ -215,9 +215,4 @@ export default {
     width: fit-content;
   }
 }
-
-.text-title {
-  font-weight: bold;
-  font-size: 1.3vw;
-}
 </style>

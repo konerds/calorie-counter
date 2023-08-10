@@ -25,6 +25,7 @@ const router = createRouter({
 });
 
 router.beforeEach(function (to, _, next) {
+  window.scrollTo(0, 0);
   if (to.meta.requiresAuth) {
     if (store.$db().model('userinfo').all().length === 0) {
       next('/auth');

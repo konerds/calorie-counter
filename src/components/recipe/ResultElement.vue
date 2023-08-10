@@ -12,9 +12,9 @@
             }
           "
           ><CheckCircleOutlined
-            style="font-size: 0.6vw; line-height: 0.6vw; margin: auto"
+            style="font-size: 16px; vertical-align: middle; margin: auto"
             v-if="!isInCart"
-          /><CloseCircleOutlined style="font-size: 0.6vw; line-height: 0.6vw" v-else />{{
+          /><CloseCircleOutlined style="font-size: 16px; vertical-align: middle" v-else />{{
             toggleCartLabel
           }}</a-button
         >
@@ -27,8 +27,9 @@
               event.stopImmediatePropagation();
             }
           "
-          ><EditOutlined style="font-size: 0.6vw; line-height: 0.6vw; margin: auto" />레시피
-          편집</a-button
+          ><EditOutlined
+            style="font-size: 16px; vertical-align: middle; margin: auto"
+          />편집</a-button
         >
         <a-button
           class="delete-recipe-button"
@@ -39,8 +40,9 @@
               event.stopImmediatePropagation();
             }
           "
-          ><DeleteOutlined style="font-size: 0.6vw; line-height: 0.6vw; margin: auto" />레시피
-          삭제</a-button
+          ><DeleteOutlined
+            style="font-size: 16px; vertical-align: middle; margin: auto"
+          />삭제</a-button
         >
         <img
           class="cover-image"
@@ -112,9 +114,9 @@ export default {
     },
     toggleCartLabel() {
       if (this.isInCart) {
-        return '장바구니에서 제외';
+        return '장바구니 제외';
       } else {
-        return '장바구니에 추가';
+        return '장바구니 추가';
       }
     },
     isCreator() {
@@ -210,41 +212,40 @@ export default {
   position: absolute;
   width: fit-content;
   height: fit-content;
-  padding-left: 0.3vw;
-  padding-right: 0.3vw;
-  top: 0.3vh;
-  right: 0.1vw;
-  font-size: 0.6vw;
-  line-height: 0.6vw;
+  padding-left: 10px;
+  padding-right: 10px;
+  top: 5px;
+  right: 5px;
+  font-size: 16px;
 }
 
 .update-recipe-button {
   position: absolute;
   width: fit-content;
   height: fit-content;
-  padding: 0.3vw;
-  bottom: 0.3vh;
-  left: 0.1vw;
-  font-size: 0.6vw;
-  line-height: 0.6vw;
+  padding-left: 10px;
+  padding-right: 10px;
+  bottom: 5px;
+  left: 5px;
+  font-size: 16px;
 }
 
 .delete-recipe-button {
   position: absolute;
   width: fit-content;
   height: fit-content;
-  padding: 0.3vw;
-  bottom: 0.3vh;
-  right: 0.1vw;
-  font-size: 0.6vw;
-  line-height: 0.6vw;
+  padding-left: 10px;
+  padding-right: 10px;
+  bottom: 5px;
+  right: 5px;
+  font-size: 16px;
 }
 
 .cover-image {
   display: block;
   margin: 0px auto;
   width: 100%;
-  height: 20vh;
+  height: 200px;
 }
 
 .result-detail-title-container {

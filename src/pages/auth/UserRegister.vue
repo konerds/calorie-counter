@@ -214,12 +214,12 @@ export default {
 }
 
 .register-form:nth-child(1) {
-  margin-top: 4vh;
+  margin-top: 50px;
 }
 
 .register-button {
   background-color: #3ddbf7;
   border-color: transparent;
-  margin-bottom: 4vh;
+  margin-bottom: 50px;
 }
 </style>

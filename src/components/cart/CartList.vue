@@ -1,22 +1,22 @@
 <template>
   <div class="cart-container">
-    <a-card class="left-info">
-      <template #title>
-        <span class="text-font text-title">내가 담은 레시피 정보</span>
-      </template>
+    <div class="recipe-element">
+      <span class="text-font text-title">내가 담은 레시피 정보</span>
       <div class="cart-item-container">
         <div class="cart-item-element" v-for="recipe in favoriteRecipe" :key="recipe">
-          <cart-element class="text-font" type="cart-list" :result="recipe"></cart-element>
+          <cart-element
+            class="cart-element-container"
+            type="cart-list"
+            :result="recipe"
+          ></cart-element>
         </div>
       </div>
-    </a-card>
-    <a-card class="right-info">
-      <template #title>
-        <span class="text-font text-title">총 필요한 재료</span>
-      </template>
-      <a-card>
+    </div>
+    <div class="recipe-element">
+      <span class="text-font text-title">총 필요한 재료</span>
+      <a-card class="total-needed-ingredients-container">
         <a-list
-          :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }"
+          :grid="{ gutter: 16, xs: 1, sm: 2, lg: 3, xl: 4, xxl: 5 }"
           :data-source="totalNeedIngredients"
         >
           <template #renderItem="{ item }">
@@ -35,7 +35,7 @@
           </template>
         </a-list>
       </a-card>
-    </a-card>
+    </div>
   </div>
 </template>
 
@@ -81,27 +81,31 @@ export default {
 
 <style scoped>
 .cart-container {
-  display: flex;
+  display: block;
   width: 100%;
   height: fit-content;
   position: absolute;
-  justify-content: space-around;
 }
 
-.left-info {
-  width: 60%;
+.recipe-element {
+  width: 100%;
 }
 
 .cart-item-container {
-  width: 100%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .cart-item-element {
   width: 100%;
 }
 
-.right-info {
-  width: 40%;
+.cart-element-container {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .text-font {
@@ -109,6 +113,19 @@ export default {
 }
 
 .text-title {
-  font-size: 1.2vw;
+  font-weight: 600;
+  font-size: large;
+}
+
+@media (min-width: 1024px) {
+  .text-title {
+    font-size: xx-large;
+  }
+}
+
+.total-needed-ingredients-container {
+  width: 90%;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 </style>

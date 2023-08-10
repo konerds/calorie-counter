@@ -7,13 +7,11 @@
             class="toggle-cart-button"
             v-if="isLoggedIn && getUser.type === 0"
             @click="toggleCart"
-            ><CheckCircleOutlined
-              style="font-size: 0.6vw; line-height: 0.6vw; margin: auto"
-              v-if="!isInCart"
-            /><CloseCircleOutlined style="font-size: 0.6vw; line-height: 0.6vw" v-else />{{
-              toggleCartLabel
-            }}</a-button
           >
+            <CheckCircleOutlined class="toggle-cart-icon" v-if="!isInCart" />
+            <CloseCircleOutlined class="toggle-cart-icon" v-else />
+            {{ toggleCartLabel }}
+          </a-button>
           <img
             class="cover-image"
             :src="result.smallImg"
@@ -26,9 +24,9 @@
         <div class="cart-detail-title-calorie">{{ result.calorie }} 칼로리</div>
       </a-card-grid>
     </a-card>
-    <a-card class="cart-detail-description-ingredients">
+    <a-card class="cart-element-container">
       <a-list
-        :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }"
+        :grid="{ gutter: 16, xs: 1, sm: 2, lg: 3, xl: 4, xxl: 5 }"
         :data-source="result.ingredients"
       >
         <template #renderItem="{ item }">
@@ -91,9 +89,9 @@ export default {
     },
     toggleCartLabel() {
       if (this.isInCart) {
-        return '장바구니에서 제외';
+        return '장바구니 제외';
       } else {
-        return '장바구니에 추가';
+        return '장바구니 추가';
       }
     }
   },
@@ -156,7 +154,7 @@ export default {
 
 .cart-detail-cover {
   width: 40%;
-  height: 25vh;
+  height: 200px;
   text-align: center;
   padding: 0;
 }
@@ -171,19 +169,33 @@ export default {
   position: absolute;
   width: fit-content;
   height: fit-content;
-  padding-left: 0.3vw;
-  padding-right: 0.3vw;
-  top: 0.3vh;
-  right: 0.1vw;
-  font-size: 0.6vw;
-  line-height: 0.6vw;
+  padding-left: 10px;
+  padding-right: 10px;
+  top: 5px;
+  right: 5px;
+  font-size: 10px;
+}
+
+.toggle-cart-icon {
+  font-size: 12px;
+  margin: auto;
+}
+
+@media (min-width: 1024px) {
+  .toggle-cart-button {
+    font-size: 16px;
+  }
+
+  .toggle-cart-icon {
+    font-size: 16px;
+  }
 }
 
 .cover-image {
   display: block;
   margin: 0px auto;
   width: 100%;
-  height: 25vh;
+  height: 250px;
 }
 
 .cart-detail-title {
@@ -191,38 +203,46 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   width: 60%;
-  height: 25vh;
+  height: 250px;
   text-align: center;
 }
 
 .cart-detail-title-meta,
 .cart-detail-title-name,
 .cart-detail-title-calorie {
+  font-family: 'Jua', sans-serif;
   width: 100%;
   text-align: left;
   margin: 0;
 }
 
 .cart-detail-title-meta {
-  font-size: 0.8vw;
-  line-height: 0.8vw;
+  font-size: 16px;
   color: #f47b0f;
-  font-weight: bold;
 }
 
 .cart-detail-title-name {
-  font-size: 2.8vw;
-  line-height: 2.8vw;
+  font-weight: bold;
+  font-size: 32px;
   text-align: center;
-  font-family: 'Jua', sans-serif;
 }
 
 .cart-detail-title-calorie {
-  font-size: 1.5vw;
-  line-height: 1.5vw;
+  font-size: 16px;
   color: #f47b0f;
   text-align: right;
-  font-weight: bold;
+}
+
+@media (min-width: 1024px) {
+  .cart-detail-title-meta {
+    font-size: 32px;
+  }
+  .cart-detail-title-name {
+    font-size: 48px;
+  }
+  .cart-detail-title-calorie {
+    font-size: 32px;
+  }
 }
 
 .cart-detail-description > p {

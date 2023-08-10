@@ -1,4 +1,5 @@
 import { Model } from '@vuex-orm/core';
+import axios from 'axios';
 
 export default class UserInfo extends Model {
   static entity = 'userinfo';
@@ -19,7 +20,6 @@ export default class UserInfo extends Model {
   static apiConfig = {
     actions: {
       async auth(payload) {
-        const axios = require('axios');
         const mode = payload.mode;
         let authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${
           import.meta.env.VITE_FIREBASE_API_KEY
@@ -29,41 +29,38 @@ export default class UserInfo extends Model {
             import.meta.env.VITE_FIREBASE_API_KEY
           }`;
         }
-        await axios
-          .post(authUrl, {
+        try {
+          const response = await axios.post(authUrl, {
             email: payload.email,
             password: payload.password,
             returnSecureToken: true
-          })
-          .then(async (response) => {
-            if (mode === 'signup') {
-              const fetchResult = await this.put(
-                `users/${response.data.localId}.json?auth=${response.data.idToken}`,
-                {
-                  nickname: payload.nickname,
-                  favoriteRecipe: '',
-                  type: payload.type
-                },
-                {
-                  persistBy: 'create'
-                }
-              );
-              if (fetchResult.response.data.error) {
-                throw new Error(
-                  '서버와의 통신이 원활하지 않습니다! 지속되는 경우, 관리자에게 문의하세요!'
-                );
-              }
-            }
-            const fetchResult = await this.fetch(response.data.localId, response.data.idToken);
-            if (fetchResult.response.data.error) {
-              throw new Error('유저 정보를 불러올 수 없습니다!');
-            }
-          })
-          .catch((error) => {
-            throw new Error(
-              error || '인증에 실패하였습니다! 이메일과 비밀번호를 다시 확인해주세요!'
-            );
           });
+          if (mode === 'signup') {
+            const fetchResult = await this.put(
+              `users/${response.data.localId}.json?auth=${response.data.idToken}`,
+              {
+                nickname: payload.nickname,
+                favoriteRecipe: '',
+                type: payload.type
+              },
+              {
+                persistBy: 'create'
+              }
+            );
+            if (fetchResult.response.data.error) {
+              throw new Error(
+                '서버와의 통신이 원활하지 않습니다! 지속되는 경우, 관리자에게 문의하세요!'
+              );
+            }
+          }
+          const fetchResult = await this.fetch(response.data.localId, response.data.idToken);
+          if (fetchResult.response.data.error) {
+            throw new Error('유저 정보를 불러올 수 없습니다!');
+          }
+        } catch (error) {
+          console.error(error);
+          throw new Error('인증에 실패하였습니다! 이메일과 비밀번호를 다시 확인해주세요!');
+        }
       },
       fetch(userId, token) {
         return this.get(`users/${userId}.json?auth=${token}`, {

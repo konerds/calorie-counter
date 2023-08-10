@@ -1,12 +1,14 @@
 <template>
   <div>
     <a-modal
+      :style="{ height: 'calc(100vh - 150px)' }"
+      :bodyStyle="{ overflowY: 'scroll' }"
       centered
       closable
       destroyOnClose
       :footer="null"
       :visible="isVisibleUpdate"
-      width="60%"
+      width="70%"
       @cancel="setUpdateRecipe(false)"
       :zIndex="999"
     >
@@ -16,12 +18,14 @@
       <update-recipe @cancel="setUpdateRecipe(false)" :recipe-name="nameForUpdate"></update-recipe>
     </a-modal>
     <a-modal
+      :style="{ height: 'calc(100vh - 150px)' }"
+      :bodyStyle="{ overflowY: 'scroll' }"
       centered
       closable
       destroyOnClose
       :footer="null"
       :visible="isVisibleCreate"
-      width="60%"
+      width="70%"
       @cancel="setCreateRecipe(false)"
       :zIndex="999"
     >
@@ -55,7 +59,7 @@
       <div v-if="isLoggedIn && getUser.type === 0" class="cart-badge" @click="toggleCartList">
         <a-badge :count="cartListSize">
           <div>
-            <ShoppingCartOutlined :style="{ color: '#F47B0F', fontSize: '4vw' }" />
+            <ShoppingCartOutlined :style="{ color: '#F47B0F', fontSize: 'xxx-large' }" />
           </div>
         </a-badge>
       </div>
@@ -133,23 +137,23 @@ export default {
     ingredients() {
       return Ingredient.query().orderBy('name', 'asc').get();
     },
-    recipes() {
-      return Recipe.query().orderBy('name', 'asc').get();
-    },
     cartListSize() {
       return this.getUser.favoriteRecipe.length;
     }
   },
   methods: {
     showResult(result, keyword) {
+      window.scrollTo(0, 0);
       this.hideRecipe();
       this.searchedResult = result;
       this.searchedKeyword = keyword;
     },
     showRecipe(recipeId) {
+      window.scrollTo(0, 0);
       this.selectedRecipe = Recipe.find(recipeId);
     },
     hideRecipe() {
+      window.scrollTo(0, 0);
       this.selectedRecipe = null;
     },
     toggleCartList() {
@@ -194,9 +198,10 @@ export default {
 
 .cart-badge {
   position: fixed;
-  top: 16%;
-  left: 94%;
-  z-index: 1;
+  top: 80px;
+  right: 16px;
+  z-index: 10;
+  cursor: pointer;
 }
 
 .search-filter {
@@ -226,6 +231,13 @@ export default {
 }
 
 .text-title {
-  font-size: 1.2vw;
+  font-weight: bold;
+  font-size: large;
+}
+
+@media (min-width: 1024px) {
+  .text-title {
+    font-size: xx-large;
+  }
 }
 </style>
