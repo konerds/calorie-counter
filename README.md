@@ -1,28 +1,34 @@
 # My Fridge Planner
 
-- 2021 마포구청 뉴딜일자리 사업단
-- 서비스 기획 및 개발 연습 토이 프로젝트
+<p>
+2021 New-deal-job Project of Mapo-gu Office<br/>
+(Recipe Search Engine)
+</p>
 
-## Project Setup
+### Why devlope this?
 
-```sh
-npm install
-```
+> To learn about Vue Framework and Vuex Library
 
-### Compile and Hot-Reload for Development
+### Using Framework
 
-```sh
-npm run dev
-```
+> Javascript
+> Vue
 
-### Compile and Minify for Production
+### Environment Variables
 
-```sh
-npm run build
-```
+> This project use dotenv library, and load .env.local file
 
-### Lint with [ESLint](https://eslint.org/)
+| Variable Name                     | Description                     |
+| --------------------------------- | ------------------------------- |
+| VITE_FIREBASE_API_KEY             | Firebase API Key                |
+| VITE_FIREBASE_AUTH_DOMAIN         | Firebase Auth Domain            |
+| VITE_FIREBASE_DATABASE_URL        | Firebase Real-time Database URL |
+| VITE_FIREBASE_PROJECT_ID          | Firebase Project ID             |
+| VITE_FIREBASE_STORAGE_BUCKET      | Firebase Storage Bucket         |
+| VITE_FIREBASE_MESSAGING_SENDER_ID | Firebase Messaging Sender ID    |
+| VITE_FIREBASE_APP_ID              | Firebase App ID                 |
+| VITE_FIREBASE_MEASUREMENT_ID      | Firebase Measurement ID         |
 
-```sh
-npm run lint
-```
+### Service Link
+
+> [Link](https://my-fridge-planner.pages.dev)
