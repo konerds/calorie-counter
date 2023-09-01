@@ -16,7 +16,7 @@
 
 ### Environment Variables
 
-> This project use dotenv library, and load .env.local file
+> This project use dotenv library, and load .env file
 
 | Variable Name                     | Description                     |
 | --------------------------------- | ------------------------------- |
