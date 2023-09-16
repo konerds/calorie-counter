@@ -190,9 +190,9 @@ export default {
   .search-container {
     display: flex;
     width: 100%;
-    height: 87.5%;
+    height: calc(100% - 120px);
     position: absolute;
-    top: 12.5%;
+    top: 120px;
   }
 }
 

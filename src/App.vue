@@ -144,9 +144,15 @@ export default {
   background: white;
   z-index: 2;
   width: 100%;
-  height: 12.5%;
+  height: 80px;
   padding: 0;
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 15%);
+}
+
+@media (min-width: 500px) {
+  #app .ant-layout-header {
+    height: 120px;
+  }
 }
 
 @media (min-width: 1024px) {
